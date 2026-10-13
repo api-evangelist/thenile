@@ -1,0 +1,19 @@
+generated: '2026-10-13'
+method: searched
+source: https://www.thenile.dev/docs/cli/introduction
+name: Nile CLI
+install:
+- npm install -g niledatabase
+- bun install -g niledatabase
+commands:
+- group: connect
+  examples: [nile connect login]
+- group: db
+  examples: [nile db list]
+- group: config
+  examples: [nile config --workspace your-workspace, nile config --db your-database, nile config --api-key YOUR_API_KEY]
+auth: Browser-based login (nile connect login), --api-key flag, saved config, or environment variables.
+docs:
+- https://www.thenile.dev/docs/cli/introduction
+- https://www.thenile.dev/docs/cli/managing_workspaces
+- https://www.thenile.dev/docs/cli/managing_tenants

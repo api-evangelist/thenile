@@ -1,0 +1,23 @@
+generated: '2026-10-13'
+method: derived
+source: https://www.thenile.dev/blog/2025-03-11-introducing-nile-mcp
+name: Nile MCP to REST Tool Crosswalk
+surfaces:
+  openapi: [openapi/thenile-global-openapi.yml, openapi/thenile-database-openapi.yml]
+  mcp: local-stdio package @niledatabase/nile-mcp-server (tool schemas not introspected)
+crosswalk:
+- {tool: create-database, category: databases, rest: [createDatabase], binding: name, confidence: medium}
+- {tool: list-databases, category: databases, rest: [listDatabases], binding: name, confidence: medium}
+- {tool: get-database, category: databases, rest: [getDatabase], binding: name, confidence: medium}
+- {tool: delete-database, category: databases, rest: [deleteDatabase], binding: name, confidence: medium}
+- {tool: list-credentials, category: credentials, rest: [listCredentials], binding: name, confidence: medium}
+- {tool: create-credential, category: credentials, rest: [createCredential], binding: name, confidence: medium}
+- {tool: list-regions, category: regions, rest: [listRegions], binding: name, confidence: medium}
+- {tool: list-tenants, category: tenants, rest: [listTenants], binding: name, confidence: low, note: listTenants is in the database API spec}
+- {tool: delete-tenant, category: tenants, rest: [deleteTenant], binding: name, confidence: low}
+mcp_only:
+- {tool: execute-sql, reason: Runs SQL over the Postgres connection; no REST operation}
+- {tool: list-resources, reason: MCP resource listing}
+- {tool: read-resource, reason: MCP resource read}
+- {tool: create-tenant, reason: No createTenant REST operation in either published spec (tenants are created via SQL insert into tenants table)}
+coverage: {tools: 13, mapped: 9, mcp_only: 4}

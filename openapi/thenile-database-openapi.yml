@@ -1,0 +1,2956 @@
+openapi: 3.0.1
+info:
+  title: Nile ReST API
+  description: Making SaaS chill.
+  contact:
+    email: support@thenile.dev
+  version: 0.1.0-226f799
+servers:
+- url: https://global.thenile.dev
+paths:
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/auth/oidc/locations:
+    get:
+      tags:
+      - authentication
+      summary: List SSO URLs
+      description: Lists all SSO login URLs for all tenants in the database. The `provider`
+        and `email` query parameters can be used to filter the results.
+      operationId: globalListTenantSSOLocations
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider
+        in: query
+        schema:
+          type: string
+      - name: email
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of authorization URLs
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uri
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/auth/oidc/providers:
+    get:
+      tags:
+      - authentication
+      summary: List registered SSO providers
+      description: Lists all SSO providers registered for all tenants. The `provider`
+        and `email` query parameters can be used to filter the results.
+      operationId: globalListTenantSSOProviders
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider
+        in: query
+        schema:
+          type: string
+      - name: email
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of registered providers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/auth/oidc/providers/{providerName}:
+    get:
+      tags:
+      - authentication
+      summary: Get SSO registration
+      description: Gets the configuration for a single sign-on provider registered
+        for a tenant.
+      operationId: globalGetTenantSSORegistration
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The registered configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - authentication
+      summary: Update tenant SSO provider
+      description: Updates a single sign-on provider configuration for a specific
+        tenant.
+      operationId: globalUpdateTenantSSOProvider
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Configuration details for a single sign-on provider. Any values
+          provided will overwrite existing values. If a value is not provided, the
+          existing value will be retained.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantSSORegistration'
+            examples:
+              Partial Configuration:
+                description: Partial Configuration
+                value: "{\n  \"clientId\": \"0oa1b2c3d4e5f6g7h8i9j\",\n  \"clientSecret\"\
+                  : \"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2\"\
+                  ,\n}\n"
+      responses:
+        '200':
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '502':
+          description: Provider configuration does not match host URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - authentication
+      summary: Register tenant SSO provider
+      description: Registers a single sign-on provider configuration for a specific
+        tenant.
+      operationId: globalRegisterTenantSSOProvider
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'Configuration details for a single sign-on provider, including
+          the email domains that should be associated with the provider.
+
+          Note: the email domains you provide should usually correspond to the domains
+          configured with the provider.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantSSORegistration'
+            examples:
+              Sample Okta Configuration:
+                description: Sample Okta Configuration
+                value:
+                  configUrl: https://dev-123456.okta.com/.well-known/openid-configuration
+                  clientId: 0oa1b2c3d4e5f6g7h8i9j
+                  clientSecret: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+                  emailDomains:
+                  - mycompany.com
+                  - anothercompany.com
+                  enabled: true
+      responses:
+        '200':
+          description: Registered configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '409':
+          description: Provider already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '502':
+          description: Provider configuration does not match host URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/auth/oidc/callback:
+    get:
+      tags:
+      - users
+      summary: Handle OIDC callback for a tenant user
+      description: Handles the callback from an OIDC provider for a specific tenant.
+        (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: globalHandleTenantOIDCCallback
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/auth/oidc/providers:
+    get:
+      tags:
+      - authentication
+      summary: List SSO registrations
+      description: Lists all single sign-on provider configurations that are registered
+        for a tenant.
+      operationId: globalListTenantSSORegistrations
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of registered configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/auth/oidc/providers/{providerName}/login:
+    get:
+      tags:
+      - authentication
+      summary: Initiate OIDC login for a tenant
+      description: Initiates the OIDC login flow for a registered authentication provider.
+      operationId: globalLoginTenantProvider
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}:
+    get:
+      tags:
+      - tenants
+      summary: Get a tenant
+      description: Gets a tenant from a database.
+      operationId: globalGetTenant
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A Tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - tenants
+      summary: Update a tenant
+      description: Updates a tenant. Only the tenant name may be updated.
+      operationId: globalUpdateTenant
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+            examples:
+              Update Tenant Request:
+                summary: Updates a tenant name
+                description: Update Tenant Request
+                value:
+                  name: Customer One
+      responses:
+        '200':
+          description: Tenant updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - tenants
+      summary: Deletes a tenant.
+      operationId: globalDeleteTenant
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Tenant deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants:
+    get:
+      summary: List tenants
+      description: Lists all tenants in a database. If a developer token is provided,
+        all tenants are listed. If a user token is provided, only tenants that the
+        user is a member of are listed.
+      operationId: globalListTenants
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users:
+    get:
+      tags:
+      - users
+      summary: List tenant users
+      description: Lists users that are associated with the specified tenant.
+      operationId: globalListTenantUsers
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - users
+      summary: Create a user in a tenant
+      description: Creates a new user and associates that user with the specified
+        tenant.
+      operationId: globalCreateTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          '
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Get a user in a tenant
+      description: Gets information about a user, but only if that user belongs to
+        the tenant specified. If the user does not belong to the tenant, this returns
+        404 (Not Found).
+      operationId: globalGetTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users/login:
+    post:
+      tags:
+      - users
+      summary: Login a user in a tenant
+      description: Authenticates a user, ensuring that the user is a member of the
+        tenant. If the user is not a member of the tenant, this returns 401 (Unauthorized).
+      operationId: globalLoginTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Get a user
+      description: Gets a user by id.
+      operationId: globalGetUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - users
+      summary: Update a user
+      description: Updates user attributes by id.
+      operationId: globalUpdateUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - users
+      summary: Delete a user
+      description: Deletes a user from the database
+      operationId: globalDeleteUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/oidc/callback:
+    get:
+      tags:
+      - users
+      summary: Handle OIDC callback for a user
+      description: Handles the callback from an OIDC provider. (This is the URL provided
+        to the OIDC provider as the callback URL.)
+      operationId: globalHandleOIDCCallback
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/me:
+    get:
+      tags:
+      - users
+      summary: Identify the user
+      description: Returns information about the user associated with the token provided
+      operationId: globalIdentifyUser
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users:
+    get:
+      tags:
+      - users
+      summary: List database users
+      description: Lists all users in the database
+      operationId: globalListUsers
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/login:
+    post:
+      tags:
+      - users
+      summary: Login a user
+      description: Login a user with email and password
+      operationId: globalLoginUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/oidc/{providerName}/login:
+    get:
+      tags:
+      - users
+      summary: Initiate OIDC user login
+      description: Initiates the OIDC login flow for a known authentication provider.
+      operationId: globalLoginOIDCUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: newTenant
+        in: query
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+  /databases/{databaseId}:
+    get:
+      tags:
+      - databases
+      summary: (Internal) Get a logical database
+      description: Gets details of a logical database from the data plane.
+      operationId: internalGetLogicalDatabase
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Database details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogicalDatabase'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    delete:
+      tags:
+      - databases
+      summary: (Internal) Delete a logical database
+      description: Marks a logical database as deleted and hard deletes all credentials.
+      operationId: internalDeleteLogicalDatabase
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Database deleted
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /databases/{databaseId}/status:
+    get:
+      tags:
+      - databases
+      summary: (Internal) Get database creation status
+      description: Get the creation status of a specific database
+      operationId: internalGetDatabaseStatus
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The current status of the database
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDatabaseStatusResponse'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /databases/me:
+    get:
+      tags:
+      - databases
+      summary: Identify the principal
+      description: Returns information about the principal associated with the token
+        provided
+      operationId: identifyPrincipal
+      responses:
+        '200':
+          description: Principal identified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Principal not identified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /internal/reconciliation/compute-claims:
+    get:
+      operationId: listComputeClaims
+      parameters:
+      - name: updated_since
+        in: query
+        schema:
+          type: string
+      - name: after_id
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/InternalService'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeClaimView'
+  /internal/reconciliation/databases:
+    get:
+      operationId: listDatabases
+      parameters:
+      - name: updated_since
+        in: query
+        schema:
+          type: string
+      - name: after_id
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/InternalService'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DatabaseView'
+  /databases/{databaseId}/auth/oidc/providers:
+    get:
+      tags:
+      - authentication
+      summary: List OIDC providers
+      description: Lists all OIDC providers registered in the database.
+      operationId: listOIDCProviders
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of OIDC providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OIDCProvider'
+    post:
+      tags:
+      - authentication
+      summary: Create OIDC provider
+      description: "Creates an OIDC provider with the database. During creation, the\
+        \ well-known configuration is loaded from the `configUrl` and stored in the\
+        \ database. \nGoogle and Okta are supported out of the box. Use this endpoint\
+        \ to register other OIDC providers."
+      operationId: createOIDCProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The configuration for a new OIDC provider. A provider must have
+          a unique name and a valid `configUrl` pointing to the well-known OIDC configuration.
+          If the provider is enabled, the `redirectUrl` back to your application must
+          be specified. (Without the `redirectUrl`, Nile cannot resolve authentication
+          attempts.)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OIDCProvider'
+            examples:
+              Create Social Provider:
+                summary: Registers a new social login provider
+                description: Create Social Provider
+                value:
+                  name: Some Social Host
+                  authType: SOCIAL
+                  enabled: true
+                  configUrl: https://some-social-host.com/.well-known/openid-configuration
+                  redirectUrl: https://myapp.com/auth/handler
+              Create SSO Provider:
+                summary: Registers a new SSO provider
+                description: Create SSO Provider
+                value:
+                  name: Some SSO Host
+                  authType: SSO
+                  enabled: true
+                  configUrl: https://some-sso-host.com/.well-known/openid-configuration
+                  redirectUrl: https://myapp.com/auth/handler
+      responses:
+        '200':
+          description: Updated OIDC provider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCProvider'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '409':
+          description: OIDC provider already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '502':
+          description: OIDC provider configuration does not match host URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/auth/oidc/providers/{providerName}:
+    get:
+      tags:
+      - authentication
+      summary: Get an OIDC provider
+      description: Gets an OIDC provider by name. If the well-known config for the
+        provider is determined to  have expired, the latest config is fetched and
+        retained, ensuring that the provider information returned is always current.
+      operationId: getOIDCProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: OIDC provider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCProvider'
+        '404':
+          description: OIDC provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    put:
+      tags:
+      - authentication
+      summary: Update OIDC provider
+      description: Updates a named OIDC provider. During an update, the well-known
+        configuration is refreshed.
+      operationId: updateOIDCProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The new configuration values for an existing OIDC provider. (The
+          `name` may not be modified.) If the provider is enabled, the `redirectUrl`
+          back to your application must be specified. (Without the `redirectUrl`,
+          Nile cannot resolve authentication attempts.)
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OIDCProvider'
+            examples:
+              Update Social Provider:
+                summary: Updates the existing social provider configuration
+                description: Update Social Provider
+                value:
+                  name: Some Social Host
+                  authType: SOCIAL
+                  enabled: true
+                  configUrl: https://some-social-host.com/.well-known/openid-configuration
+                  redirectUrl: https://myapp.com/auth/handler
+              Update SSO Provider:
+                summary: Updates the existing SSO provider configuration
+                description: Update SSO Provider
+                value:
+                  name: Some SSO Host
+                  authType: SSO
+                  enabled: true
+                  configUrl: https://some-sso-host.com/.well-known/openid-configuration
+                  redirectUrl: https://myapp.com/auth/handler
+      responses:
+        '200':
+          description: Updated OIDC provider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCProvider'
+        '400':
+          description: OIDC provider name mismatch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: OIDC provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/auth/oidc/relyingparties:
+    get:
+      tags:
+      - authentication
+      summary: List relying parties
+      description: Lists all OIDC relying parties in the database.
+      operationId: listRelyingParties
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of relying parties
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OIDCRelyingParty'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - authentication
+      summary: Update relying party
+      description: Updates an OIDC relying party. The `clientId`, `clientSecret` and
+        `enabled` properties may be modified.
+      operationId: updateRelyingParty
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Configuration details for an existing OIDC relying party. The
+          `clientId`, `clientSecret` and `enabled` properties may be modified.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OIDCRelyingParty'
+            examples:
+              Create Relying Party Request:
+                summary: Registers a relying party for an OIDC provider
+                description: Create Relying Party Request
+                value:
+                  provider: GOOGLE
+                  clientId: 0oa1b2c3d4e5f6g7h8i9j
+                  clientSecret: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+                  enabled: true
+      responses:
+        '200':
+          description: Relying party updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCRelyingParty'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Relying party not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - authentication
+      summary: Create relying party
+      description: Creates a relying party associated with a known OIDC provider.
+      operationId: createRelyingParty
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Configuration details for an OIDC relying party that relies on  a
+          registered OIDC provider. This should include the client ID and secret for
+          the relying party.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OIDCRelyingParty'
+            examples:
+              Create Relying Party Request:
+                summary: Registers a relying party for an OIDC provider
+                description: Create Relying Party Request
+                value:
+                  provider: GOOGLE
+                  clientId: 0oa1b2c3d4e5f6g7h8i9j
+                  clientSecret: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+                  enabled: true
+      responses:
+        '201':
+          description: Relying party created successfully
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/auth/oidc/relyingparties/{relyingPartyId}:
+    get:
+      tags:
+      - authentication
+      summary: Get a relying party
+      description: Get an OIDC relying party by its identifier.
+      operationId: getRelyingParty
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: relyingPartyId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The relying party
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCRelyingParty'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Relying party not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/auth/oidc/locations:
+    get:
+      tags:
+      - authentication
+      summary: List SSO URLs
+      description: Lists all SSO login URLs for all tenants in the database. The `provider`
+        and `email` query parameters can be used to filter the results.
+      operationId: listTenantSSOLocations
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider
+        in: query
+        schema:
+          type: string
+      - name: email
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of authorization URLs
+          content:
+            application/json:
+              schema:
+                type: string
+                format: uri
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /databases/{databaseId}/tenants/auth/oidc/providers:
+    get:
+      tags:
+      - authentication
+      summary: List registered SSO providers
+      description: Lists all SSO providers registered for all tenants. The `provider`
+        and `email` query parameters can be used to filter the results.
+      operationId: listTenantSSOProviders
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: provider
+        in: query
+        schema:
+          type: string
+      - name: email
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of registered providers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/auth/oidc/providers/{providerName}:
+    get:
+      tags:
+      - authentication
+      summary: Get SSO registration
+      description: Gets the configuration for a single sign-on provider registered
+        for a tenant.
+      operationId: getTenantSSORegistration
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The registered configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - authentication
+      summary: Update tenant SSO provider
+      description: Updates a single sign-on provider configuration for a specific
+        tenant.
+      operationId: updateTenantSSOProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Configuration details for a single sign-on provider. Any values
+          provided will overwrite existing values. If a value is not provided, the
+          existing value will be retained.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantSSORegistration'
+            examples:
+              Partial Configuration:
+                description: Partial Configuration
+                value: "{\n  \"clientId\": \"0oa1b2c3d4e5f6g7h8i9j\",\n  \"clientSecret\"\
+                  : \"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2\"\
+                  ,\n}\n"
+      responses:
+        '200':
+          description: Updated configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Provider not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '502':
+          description: Provider configuration does not match host URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - authentication
+      summary: Register tenant SSO provider
+      description: Registers a single sign-on provider configuration for a specific
+        tenant.
+      operationId: registerTenantSSOProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'Configuration details for a single sign-on provider, including
+          the email domains that should be associated with the provider.
+
+          Note: the email domains you provide should usually correspond to the domains
+          configured with the provider.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TenantSSORegistration'
+            examples:
+              Sample Okta Configuration:
+                description: Sample Okta Configuration
+                value:
+                  configUrl: https://dev-123456.okta.com/.well-known/openid-configuration
+                  clientId: 0oa1b2c3d4e5f6g7h8i9j
+                  clientSecret: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6a7b8c9d0e1f2
+                  emailDomains:
+                  - mycompany.com
+                  - anothercompany.com
+                  enabled: true
+      responses:
+        '200':
+          description: Registered configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '409':
+          description: Provider already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '502':
+          description: Provider configuration does not match host URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/auth/oidc/callback:
+    get:
+      tags:
+      - users
+      summary: Handle OIDC callback for a tenant user
+      description: Handles the callback from an OIDC provider for a specific tenant.
+        (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: handleTenantOIDCCallback
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+  /databases/{databaseId}/tenants/{tenantId}/auth/oidc/providers:
+    get:
+      tags:
+      - authentication
+      summary: List SSO registrations
+      description: Lists all single sign-on provider configurations that are registered
+        for a tenant.
+      operationId: listTenantSSORegistrations
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of registered configurations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TenantSSORegistration'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/auth/oidc/providers/{providerName}/login:
+    get:
+      tags:
+      - authentication
+      summary: Initiate OIDC login for a tenant
+      description: Initiates the OIDC login flow for a registered authentication provider.
+      operationId: loginTenantProvider
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+  /databases/{databaseId}/tenants/{tenantId}:
+    get:
+      tags:
+      - tenants
+      summary: Get a tenant
+      description: Gets a tenant from a database.
+      operationId: getTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A Tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - tenants
+      summary: Update a tenant
+      description: Updates a tenant. Only the tenant name may be updated.
+      operationId: updateTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+            examples:
+              Update Tenant Request:
+                summary: Updates a tenant name
+                description: Update Tenant Request
+                value:
+                  name: Customer One
+      responses:
+        '200':
+          description: Tenant updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - tenants
+      summary: Deletes a tenant.
+      operationId: deleteTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Tenant deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants:
+    get:
+      summary: List tenants
+      description: Lists all tenants in a database. If a developer token is provided,
+        all tenants are listed. If a user token is provided, only tenants that the
+        user is a member of are listed.
+      operationId: listTenants
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/users:
+    get:
+      tags:
+      - users
+      summary: List tenant users
+      description: Lists users that are associated with the specified tenant.
+      operationId: listTenantUsers
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - users
+      summary: Create a user in a tenant
+      description: Creates a new user and associates that user with the specified
+        tenant.
+      operationId: createTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          '
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Get a user in a tenant
+      description: Gets information about a user, but only if that user belongs to
+        the tenant specified. If the user does not belong to the tenant, this returns
+        404 (Not Found).
+      operationId: getTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/tenants/{tenantId}/users/login:
+    post:
+      tags:
+      - users
+      summary: Login a user in a tenant
+      description: Authenticates a user, ensuring that the user is a member of the
+        tenant. If the user is not a member of the tenant, this returns 401 (Unauthorized).
+      operationId: loginTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /databases/{databaseId}/users/{userId}:
+    get:
+      tags:
+      - users
+      summary: Get a user
+      description: Gets a user by id.
+      operationId: getUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - users
+      summary: Update a user
+      description: Updates user attributes by id.
+      operationId: updateUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - users
+      summary: Delete a user
+      description: Deletes a user from the database
+      operationId: deleteUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/users:
+    get:
+      tags:
+      - users
+      summary: List database users
+      description: Lists all users in the database
+      operationId: listUsers
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - users
+      summary: Create a new user
+      description: Creates a new user using basic credentials—email address and password.
+      operationId: createUser
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          The `newTenant` is optional; if provided, it is used as the name of a new
+          tenant record associated with the newly created user.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+              Create User Request with Tenant:
+                summary: Creates a user and a new tenant for that user
+                description: Create User Request with Tenant
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+                  newTenant: My Sandbox
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+  /databases/{databaseId}/users/oidc/callback:
+    get:
+      tags:
+      - users
+      summary: Handle OIDC callback for a user
+      description: Handles the callback from an OIDC provider. (This is the URL provided
+        to the OIDC provider as the callback URL.)
+      operationId: handleOIDCCallbackDP
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+  /databases/{databaseId}/users/me:
+    get:
+      tags:
+      - users
+      summary: Identify the user
+      description: Returns information about the user associated with the token provided
+      operationId: identifyUser
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+  /databases/{databaseId}/users/login:
+    post:
+      tags:
+      - users
+      summary: Login a user
+      description: Login a user with email and password
+      operationId: loginUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /databases/{databaseId}/users/oidc/{providerName}/login:
+    get:
+      tags:
+      - users
+      summary: Initiate OIDC user login
+      description: Initiates the OIDC login flow for a known authentication provider.
+      operationId: loginOIDCUserDP
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: newTenant
+        in: query
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+components:
+  schemas:
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - pdb_creation_failure
+          - get_pdbs_failure
+          - get_ldbs_placed_on_pdb_failure
+          - credential_deletion_failure
+          - get_ldb_on_pdb_placement_status_failure
+          - pdb_deletion_failure
+          - missing_flavor_id
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    TenantSSORegistration:
+      required:
+      - clientId
+      - configUrl
+      - provider
+      - tenantId
+      type: object
+      properties:
+        id:
+          type: string
+          readOnly: true
+        tenantId:
+          type: string
+        provider:
+          type: string
+        configUrl:
+          type: string
+          format: uri
+        clientId:
+          minLength: 1
+          type: string
+        emailDomains:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+    OIDCFormPostView:
+      type: object
+      properties:
+        tenantId:
+          type: string
+    Tenant:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    CreateTenantRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+    LoginUserResponse:
+      required:
+      - id
+      - token
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        token:
+          $ref: '#/components/schemas/Token'
+    Token:
+      required:
+      - id
+      - jwt
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+        jwt:
+          minLength: 1
+          type: string
+        maxAge:
+          minimum: 0
+          type: integer
+          format: int64
+        type:
+          type: string
+          enum:
+          - ACCESS_TOKEN
+          - REFRESH_TOKEN
+          - ID_TOKEN
+    CreateBasicUserRequest:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        newTenant:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    LoginRequest:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    LogicalDatabase:
+      required:
+      - id
+      - placementStrategy
+      - sharedPdb
+      - status
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+        sharedPdb:
+          $ref: '#/components/schemas/PhysicalDatabase'
+        placementStrategy:
+          type: string
+          enum:
+          - RANDOM
+          - SINGLE
+    PhysicalDatabase:
+      required:
+      - id
+      - pdbId
+      - regionId
+      type: object
+      properties:
+        id:
+          type: string
+        regionId:
+          type: integer
+          format: int32
+        pdbId:
+          type: integer
+          format: int32
+    GetDatabaseStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+    PrincipalResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        principalType:
+          type: string
+          enum:
+          - DEVELOPER
+          - USER
+          - INTERNAL
+        email:
+          type: string
+        name:
+          type: string
+    ComputeClaimView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        regionId:
+          type: integer
+          format: int32
+        pdbId:
+          type: integer
+          format: int32
+        host:
+          type: string
+        database:
+          type: string
+        created:
+          type: string
+        updated:
+          type: string
+        deleted:
+          type: string
+    InternalService:
+      type: object
+      properties:
+        id:
+          type: string
+    DatabaseView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+        workspaceId:
+          type: string
+          format: uuid
+        workspaceSlug:
+          type: string
+        sharedRegion:
+          type: integer
+          format: int32
+        sharedPdb:
+          type: integer
+          format: int32
+        created:
+          type: string
+        updated:
+          type: string
+        deleted:
+          type: string
+    JsonNode:
+      type: object
+    OIDCProvider:
+      required:
+      - authType
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+        authType:
+          type: string
+          enum:
+          - SSO
+          - SOCIAL
+        redirectUrl:
+          type: string
+          format: uri
+        enabled:
+          type: boolean
+        configUrl:
+          type: string
+          format: uri
+        config:
+          $ref: '#/components/schemas/JsonNode'
+        ttl_sec:
+          type: integer
+          format: int32
+    OIDCRelyingParty:
+      required:
+      - clientId
+      - clientSecret
+      - provider
+      type: object
+      properties:
+        id:
+          type: string
+        tenantId:
+          type: string
+        provider:
+          type: string
+        clientId:
+          minLength: 1
+          type: string
+        clientSecret:
+          minLength: 1
+          type: string
+        emailDomains:
+          type: array
+          items:
+            type: string
+        enabled:
+          type: boolean
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-workspace-usage-response-schema.json",
+  "title": "WorkspaceUsageResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceUsageResponse",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "integer",
+      "format": "int32"
+    },
+    "workspaceSlug": {
+      "type": "string"
+    },
+    "start": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "asOf": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "cpu": {
+      "$ref": "#/$defs/MetricCpuUsage"
+    },
+    "storage": {
+      "$ref": "#/$defs/MetricStorageUsage"
+    },
+    "compute": {
+      "$ref": "#/$defs/MetricComputeUsage"
+    },
+    "storageHistory": {
+      "$ref": "#/$defs/MetricStorageHistory"
+    }
+  },
+  "$defs": {
+    "ComputeUsage": {
+      "type": "object",
+      "properties": {
+        "totalVCPUHours": {
+          "type": "number",
+          "format": "double"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/TimeSeriesPoint"
+          }
+        },
+        "maxCPUCount": {
+          "type": "number",
+          "format": "double"
+        },
+        "instanceCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CpuPoint": {
+      "type": "object",
+      "properties": {
+        "bucket": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "milliseconds": {
+          "type": "number"
+        }
+      }
+    },
+    "CpuUsage": {
+      "type": "object",
+      "properties": {
+        "totalMilliseconds": {
+          "type": "number"
+        },
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/CpuPoint"
+          }
+        },
+        "databaseCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "reportingDatabaseCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "MetricComputeUsage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/ComputeUsage"
+        },
+        "unavailableDatabaseIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "MetricCpuUsage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/CpuUsage"
+        },
+        "unavailableDatabaseIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "MetricStorageHistory": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/StorageHistory"
+        },
+        "unavailableDatabaseIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "MetricStorageUsage": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        },
+        "data": {
+          "$ref": "#/$defs/StorageUsage"
+        },
+        "unavailableDatabaseIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "StorageHistory": {
+      "type": "object",
+      "properties": {
+        "points": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/StoragePoint"
+          }
+        }
+      }
+    },
+    "StoragePoint": {
+      "type": "object",
+      "properties": {
+        "bucket": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "totalBytes": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "StorageUsage": {
+      "type": "object",
+      "properties": {
+        "activeBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "derivedBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "historyBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "logicalBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "billableBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "totalBytes": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "oldestCollectedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "newestCollectedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "databaseCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "reportingDatabaseCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TimeSeriesPoint": {
+      "type": "object",
+      "properties": {
+        "x": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "y": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-logical-database-schema.json",
+  "title": "LogicalDatabase",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-database-openapi.yml#/components/schemas/LogicalDatabase",
+  "required": [
+    "id",
+    "placementStrategy",
+    "sharedPdb",
+    "status"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "REQUESTED",
+        "BUILT",
+        "POOLED",
+        "READY"
+      ]
+    },
+    "sharedPdb": {
+      "$ref": "#/$defs/PhysicalDatabase"
+    },
+    "placementStrategy": {
+      "type": "string",
+      "enum": [
+        "RANDOM",
+        "SINGLE"
+      ]
+    }
+  },
+  "$defs": {
+    "PhysicalDatabase": {
+      "required": [
+        "id",
+        "pdbId",
+        "regionId"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "regionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "pdbId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,289 @@
+# Nile Documentation
+
+- [Introduction](https://thenile.dev/docs/getting-started/getting-started.md): Nile - PostgreSQL re-engineered for B2B apps
+- [Explore Nile in 5 minutes with PSQL](https://thenile.dev/docs/getting-started/languages/sql.md)
+- [Build a B2B Application with Postgres and NextJS](https://thenile.dev/docs/getting-started/languages/nextjs.md)
+- [Build AI-Native B2B application with Postgres and Drizzle ORM](https://thenile.dev/docs/getting-started/languages/drizzle.md)
+- [Build AI-Native B2B application with Postgres and Prisma](https://thenile.dev/docs/getting-started/languages/prisma.md)
+- [Build AI-Native B2B application with Postgres and Python](https://thenile.dev/docs/getting-started/languages/python.md)
+- [Build AI-Native B2B application with Postgres, NodeJS and React](https://thenile.dev/docs/getting-started/languages/node.md)
+- [What is Nile](https://thenile.dev/docs/getting-started/whatisnile.md): Nile explained in 3 minutes
+- [SmartBooks AI - Your Intelligent Accounting Partner](https://thenile.dev/docs/getting-started/usecases/accounts.md)
+- [SmartSpend AI - Set teams free from manual expenses](https://thenile.dev/docs/getting-started/usecases/expensify.md)
+- [Feedback360 AI - 360-Degree Feedback, Perfected with AI](https://thenile.dev/docs/getting-started/usecases/feedback.md)
+- [HealthPilot - Enhancing Patient Care with Intelligent Assistance](https://thenile.dev/docs/getting-started/usecases/health.md)
+- [RecruitAI - Smarter Hiring, Powered by AI](https://thenile.dev/docs/getting-started/usecases/hiring.md)
+- [HRIntelli - Magically Simplifying HR with AI](https://thenile.dev/docs/getting-started/usecases/hr.md)
+- [TaskPilot AI - Your AI-Driven Guide to Seamless Task Management](https://thenile.dev/docs/getting-started/usecases/issue-tracking.md)
+- [SalesLeadPilot - AI-Driven Guidance for Superior Lead Management](https://thenile.dev/docs/getting-started/usecases/lead-management.md)
+- [LawPilot AI - AI That Thinks Like a Lawyer](https://thenile.dev/docs/getting-started/usecases/legal.md)
+- [SmartCampaign AI - Your AI-Driven Marketing Ally](https://thenile.dev/docs/getting-started/usecases/marketing.md)
+- [SmartNotion AI - Crafting Organized Thoughts with Artificial Intelligence](https://thenile.dev/docs/getting-started/usecases/notion.md)
+- [OnboardIQ - Transform Customer Onboarding with Insightful AI](https://thenile.dev/docs/getting-started/usecases/onboarding.md)
+- [CalendIQ - Intelligent Calendar Management for Busy Lives](https://thenile.dev/docs/getting-started/usecases/scheduler.md)
+- [SmartLearn: AI Intelligence for the Modern Classroom](https://thenile.dev/docs/getting-started/usecases/schoology.md)
+- [Slack++ - Built with AI to power work](https://thenile.dev/docs/getting-started/usecases/slack.md)
+- [SupplyAI - AI-Powered Efficiency for Your Supply Chain](https://thenile.dev/docs/getting-started/usecases/supply.md)
+- [CustomerDesk AI - AI-Powered Efficiency for Your Supply Chain](https://thenile.dev/docs/getting-started/usecases/support.md)
+- [AITravelMate - your business trips managed by AI](https://thenile.dev/docs/getting-started/usecases/tripactions.md)
+- [KnowledgeAI - PDF search assistant for your organization](https://thenile.dev/docs/getting-started/examples/chat_with_pdf.md)
+- [Autonomous Code Assistant - Code more, type less](https://thenile.dev/docs/getting-started/examples/code_assistant.md)
+- [Sales Insight - AI-native, multi-tenant enterprise sales assistant](https://thenile.dev/docs/getting-started/examples/sales_insight.md)
+- [Task Genius - AI-native, multi-tenant enterprise task manager](https://thenile.dev/docs/getting-started/examples/task_genius.md)
+- [Getting started with Nile's Postgres platform locally with Docker](https://thenile.dev/docs/getting-started/postgres_docker.md)
+- [Alembic](https://thenile.dev/docs/getting-started/schema_migrations/alembic.md)
+- [Schema Migrations with Django](https://thenile.dev/docs/getting-started/schema_migrations/django.md)
+- [Schema Migrations with Drizzle](https://thenile.dev/docs/getting-started/schema_migrations/drizzle.md)
+- [Prisma](https://thenile.dev/docs/getting-started/schema_migrations/prisma.md)
+- [Architecture of Nile Postgres](https://thenile.dev/docs/getting-started/architecture.md)
+- [Integration testing with Nile's Postgres platform using Docker](https://thenile.dev/docs/getting-started/postgres_testing.md)
+- [Tenant Virtualization](https://thenile.dev/docs/tenant-virtualization/introduction.md)
+- [Tenant Isolation](https://thenile.dev/docs/tenant-virtualization/tenant-isolation.md)
+- [Tenant Management](https://thenile.dev/docs/tenant-virtualization/tenant-management.md)
+- [Tenant Placement](https://thenile.dev/docs/tenant-virtualization/tenant-placement.md)
+- [Tenant Sharing](https://thenile.dev/docs/tenant-virtualization/tenant-sharing.md)
+- [Introduction to Postgres](https://thenile.dev/docs/postgres/introduction.md)
+- [Creating a table in Postgres](https://thenile.dev/docs/postgres/createtable.md)
+- [Numeric types in Postgres](https://thenile.dev/docs/postgres/datatype/numeric.md)
+- [Character types in Postgres](https://thenile.dev/docs/postgres/datatype/character.md)
+- [Date and Time Types in Postgres](https://thenile.dev/docs/postgres/datatype/date.md)
+- [JSON in Postgres](https://thenile.dev/docs/postgres/datatype/json.md)
+- [Array types in Postgres](https://thenile.dev/docs/postgres/datatype/arrays.md)
+- [Indexes in Postgres](https://thenile.dev/docs/postgres/indexes.md)
+- [Joins in Postgres](https://thenile.dev/docs/postgres/joins.md)
+- [Views in Postgres](https://thenile.dev/docs/postgres/views.md)
+- [Connecting to Postgres using DBeaver](https://thenile.dev/docs/postgres/tools/dbeaver.md)
+- [Connecting to Postgres using PgAdmin](https://thenile.dev/docs/postgres/tools/pgadmin.md)
+- [Connecting to Postgres using PSQL](https://thenile.dev/docs/postgres/tools/psql.md)
+- [Postgres Compatibility](https://thenile.dev/docs/postgres/postgres-compatibility.md)
+- [Introduction](https://thenile.dev/docs/extensions/introduction.md): PostgreSQL Extension Store in Nile
+- [Pgvector](https://thenile.dev/docs/extensions/vector.md): Vector extension for PostgreSQL
+- [PostGIS](https://thenile.dev/docs/extensions/postgis.md): Spatial and Geographic Objects for PostgreSQL
+- [UUID-OSSP](https://thenile.dev/docs/extensions/uuid-ossp.md): UUID generation functions for PostgreSQL
+- [Crypto](https://thenile.dev/docs/extensions/pgcrypto.md): Cryptographic functions for PostgreSQL
+- [Bloom](https://thenile.dev/docs/extensions/bloom.md): Probabilistic index that can be useful for columns with many distinct values.
+- [Btree_gin](https://thenile.dev/docs/extensions/btree_gin.md): Enables GIN indexes to support B-tree indexable data types.
+- [Btree_gist](https://thenile.dev/docs/extensions/btree_gist.md): Allows GiST indexes to support B-tree indexable data types.
+- [Citext](https://thenile.dev/docs/extensions/citext.md): Provides a case-insensitive text type.
+- [Fuzzystrmatch](https://thenile.dev/docs/extensions/fuzzystrmatch.md): Provides functions for fuzzy string matching.
+- [Pgvectorscale](https://thenile.dev/docs/extensions/pgvectorscale.md): DiskANN index support for pgvector
+- [pg_bigm](https://thenile.dev/docs/extensions/pg_bigm.md): Full-text search using bigrams
+- [pg_similarity](https://thenile.dev/docs/extensions/pg_similarity.md): Text similarity measures in PostgreSQL
+- [pg_trgm](https://thenile.dev/docs/extensions/pg_trgm.md): Similarity search in PostgreSQL using trigrams
+- [Prefix](https://thenile.dev/docs/extensions/prefix.md): Prefix search functionality for PostgreSQL
+- [Cube](https://thenile.dev/docs/extensions/cube.md): Provides a data type for multi-dimensional cubes.
+- [Earthdistance](https://thenile.dev/docs/extensions/earthdistance.md): Provides functions for calculating great-circle distances between points on Earth.
+- [Financial](https://thenile.dev/docs/extensions/financial.md): Provides specialized function for computing the Irregular Internal Rate of Return (XIRR).
+- [HLL](https://thenile.dev/docs/extensions/hll.md): Probabilistic data structure that estimates the number of unique elements in a set.
+- [Intagg](https://thenile.dev/docs/extensions/intagg.md): Integer aggregator and enumerator functions
+- [Intarray](https://thenile.dev/docs/extensions/intarray.md): Additional functions and operators for integer arrays
+- [Quantile](https://thenile.dev/docs/extensions/quantile.md): Efficient quantile and percentile calculations in PostgreSQL
+- [Random](https://thenile.dev/docs/extensions/random.md): Random data generator extension for PostgreSQL with wide range of data types
+- [Tablefunc](https://thenile.dev/docs/extensions/tablefunc.md): Table function utilities for cross tabulation and pivot operations
+- [Xicor](https://thenile.dev/docs/extensions/xicor.md): Incremental correlation calculations in PostgreSQL
+- [Emailaddr](https://thenile.dev/docs/extensions/emailaddr.md): Provides a specialized data type for storing and validating email addresses.
+- [Hstore](https://thenile.dev/docs/extensions/hstore.md): Store key-value pairs within a single PostgreSQL value
+- [IP4R](https://thenile.dev/docs/extensions/ip4r.md): IPv4 and IPv6 types and range operations
+- [ISN](https://thenile.dev/docs/extensions/isn.md): International Standard Number data types
+- [ltree](https://thenile.dev/docs/extensions/ltree.md): Hierarchical tree-like structures in PostgreSQL databases
+- [RDKit](https://thenile.dev/docs/extensions/rdkit.md): RDKit extension for chemical structure handling in PostgreSQL
+- [Seg](https://thenile.dev/docs/extensions/seg.md): Line segment and floating-point interval data type for PostgreSQL
+- [Unit](https://thenile.dev/docs/extensions/unit.md): SI unit conversion and dimensional analysis for PostgreSQL
+- [H3](https://thenile.dev/docs/extensions/h3.md): H3 is a spatial indexing system developed by Uber.
+- [H3_postgis](https://thenile.dev/docs/extensions/h3_postgis.md): PostgreSQL extends H3 functionality with PostGIS integration.
+- [pgRouting](https://thenile.dev/docs/extensions/pgrouting.md): Geospatial routing extension for PostgreSQL
+- [PostGIS Raster](https://thenile.dev/docs/extensions/postgis_raster.md): Raster Data Support for PostGIS
+- [Introduction](https://thenile.dev/docs/auth/introduction.md)
+- [Comparison](https://thenile.dev/docs/auth/comparison.md)
+- [Installation](https://thenile.dev/docs/auth/getting-started/installation.md): Install nile-auth in your application
+- [NextJs](https://thenile.dev/docs/auth/quickstarts/nextjs.md): Get started with Nile Auth in minutes
+- [Remix](https://thenile.dev/docs/auth/quickstarts/remix.md): Integrate Nile Auth with Remix applications
+- [Express.js](https://thenile.dev/docs/auth/quickstarts/express.md): Integrate Nile Auth with Express.js applications
+- [Self Host Nile Auth](https://thenile.dev/docs/auth/selfhosting.md): Learn how to self-host Nile Auth in your own infrastructure
+- [Examples](https://thenile.dev/docs/auth/examples.md): End to end examples for adding Nile Auth to your B2B application
+- [Tenants](https://thenile.dev/docs/auth/concepts/tenants.md): Learn about tenant management in Nile Auth
+- [Users](https://thenile.dev/docs/auth/concepts/users.md): Understanding user management in Nile Auth
+- [Sessions](https://thenile.dev/docs/auth/concepts/sessions.md): Understanding session management in Nile Auth
+- [JWTs](https://thenile.dev/docs/auth/concepts/jwt.md): Understanding JWT implementation in Nile Auth
+- [Cookies](https://thenile.dev/docs/auth/concepts/cookies.md): Understanding cookie usage in Nile Auth
+- [OAuth](https://thenile.dev/docs/auth/concepts/oauth.md): Understanding OAuth implementation in Nile Auth
+- [Built-in Tables](https://thenile.dev/docs/auth/concepts/builtintables.md): Understanding built-in database tables in Nile Auth
+- [Per-Tenant Overrides](https://thenile.dev/docs/auth/concepts/per-tenantoverrides.md): Understanding per-tenant configuration overrides in Nile Auth
+- [Account Linking](https://thenile.dev/docs/auth/concepts/acclinking.md): Understanding account linking in Nile Auth
+- [Extensions](https://thenile.dev/docs/auth/concepts/extensions.md): Extend the SDK to automatically set context in your application
+- [Multi-factor Authentication (MFA) Concepts](https://thenile.dev/docs/auth/concepts/multifactor.md): Understand the conceptual flow of Multi-factor Authentication (MFA) in Nile.
+- [Passwords](https://thenile.dev/docs/auth/email/password.md): Learn about password management features in Nile Auth
+- [Templates](https://thenile.dev/docs/auth/email/templates.md): Customize email templates in Nile Auth
+- [Verification](https://thenile.dev/docs/auth/email/verification.md)
+- [Custom SMTP](https://thenile.dev/docs/auth/email/customsmtp.md): Configure custom SMTP servers in Nile Auth
+- [Invites](https://thenile.dev/docs/auth/email/invites.md)
+- [Google](https://thenile.dev/docs/auth/singlesignon/google.md): Integrate Google Single Sign-On with Nile Auth
+- [GitHub](https://thenile.dev/docs/auth/singlesignon/github.md): Integrate GitHub Single Sign-On with Nile Auth
+- [Discord](https://thenile.dev/docs/auth/singlesignon/discord.md): Integrate Discord Single Sign-On with Nile Auth
+- [LinkedIn](https://thenile.dev/docs/auth/singlesignon/linkedin.md): Integrate LinkedIn Single Sign-On with Nile Auth
+- [Microsoft Azure](https://thenile.dev/docs/auth/singlesignon/microsoft.md): Integrate Azure Single Sign-On with Nile Auth
+- [HubSpot](https://thenile.dev/docs/auth/singlesignon/hubspot.md): Integrate HubSpot Single Sign-On with Nile Auth
+- [X (Twitter)](https://thenile.dev/docs/auth/singlesignon/x.md): Integrate X (Twitter) Single Sign-On with Nile Auth
+- [Slack](https://thenile.dev/docs/auth/singlesignon/slack.md): Integrate Slack Single Sign-On with Nile Auth
+- [Magic Link](https://thenile.dev/docs/auth/magiclink.md): Magic Link Authentication
+- [Sign In](https://thenile.dev/docs/auth/components/signin.md): Learn how to use the Nile Auth Sign In component
+- [Sign Up](https://thenile.dev/docs/auth/components/signup.md): Learn how to use the Nile Auth Sign Up component
+- [Sign Out](https://thenile.dev/docs/auth/components/signout.md): Learn how to use the Nile Auth Sign Out component
+- [Users](https://thenile.dev/docs/auth/components/user.md): Learn how to use the Nile Auth User component
+- [Organization](https://thenile.dev/docs/auth/components/organization.md): Learn how to use the Nile Auth Organization component
+- [Customize](https://thenile.dev/docs/auth/components/customization.md): Learn how to style and customize the Nile Auth components
+- [Multi-factor](https://thenile.dev/docs/auth/components/multifactor.md): Nile Auth React components for MFA setup, challenge, and disable flows
+- [Managing Tenants](https://thenile.dev/docs/auth/dashboard/managing-tenants.md): Learn how to manage tenants using the Nile Auth Dashboard
+- [Managing Users](https://thenile.dev/docs/auth/dashboard/managing-users.md): Learn how to manage users using the Nile Auth Dashboard
+- [Configurations](https://thenile.dev/docs/auth/dashboard/configurations.md): Configure Nile Auth settings in the Dashboard
+- [From NextAuth.js](https://thenile.dev/docs/auth/migration/fromnextauth.md): Learn how to migrate from NextAuth.js to Nile Auth
+- [From Firebase](https://thenile.dev/docs/auth/migration/fromfirebase.md): Learn how to migrate from Firebase Authentication to Nile Auth
+- [From Auth0](https://thenile.dev/docs/auth/migration/fromauth0.md): Learn how to migrate from Auth0 to Nile Auth
+- [Overview](https://thenile.dev/docs/auth/sdk-reference/javascript/overview.md): Toolkit for building multi-tenant applications with Next.js, Remix, Express, and more
+- [Auth](https://thenile.dev/docs/auth/sdk-reference/javascript/server/auth.md): Secure server-side user authentication
+- [Users](https://thenile.dev/docs/auth/sdk-reference/javascript/server/users.md): Managing the currently authenticated user
+- [Tenants](https://thenile.dev/docs/auth/sdk-reference/javascript/server/tenants.md): Managing tenants for the current user
+- [DB](https://thenile.dev/docs/auth/sdk-reference/javascript/server/db.md): Using the Nile-JS SDK DB client
+- [Routes](https://thenile.dev/docs/auth/sdk-reference/javascript/server/routes.md): Routes in the Nile-JS SDK
+- [Configuration](https://thenile.dev/docs/auth/sdk-reference/javascript/server/configuration.md): Configuration options for the Nile-JS SDK
+- [JavaScript (client)](https://thenile.dev/docs/auth/sdk-reference/javascript/client/authorizer.md): Use the Authorizer class from @niledatabase/client to manage authentication
+- [Errors](https://thenile.dev/docs/auth/help/errors.md): Common errors and their solutions in Nile Auth
+- [FAQ](https://thenile.dev/docs/auth/help/faq.md): Common questions and answers about Nile Auth
+- [Community](https://thenile.dev/docs/auth/help/community.md): Join the Nile Auth community
+- [Development](https://thenile.dev/docs/auth/contributing/develop.md): Learn how to contribute to Nile Auth development
+- [Testing](https://thenile.dev/docs/auth/contributing/testing.md): Learn how to test your contributions to Nile Auth
+- [Issues](https://thenile.dev/docs/auth/contributing/report.md): Learn how to report issues and contribute to Nile Auth improvement
+- [Roadmap](https://thenile.dev/docs/auth/roadmap.md): Future plans and upcoming features for Nile Auth
+- [Express](https://thenile.dev/docs/auth/frameworks/express.md): Integrate Nile Auth with express applications
+- [Next.js](https://thenile.dev/docs/auth/frameworks/nextjs.md): Integrate Nile Auth with Next.js applications
+- [Nitro](https://thenile.dev/docs/auth/frameworks/nitro.md): Integrate Nile Auth with Nitro applications
+- [Nuxt](https://thenile.dev/docs/auth/frameworks/nuxt.md): Integrate Nile Auth with Nuxt applications
+- [React](https://thenile.dev/docs/auth/frameworks/react.md): Integrate Nile Auth with React applications
+- [Remix](https://thenile.dev/docs/auth/frameworks/remix.md): Integrate Nile Auth with Remix applications
+- [Elysia](https://thenile.dev/docs/auth/frameworks/elysia.md): Integrate Nile Auth with Elysia applications
+- [Generative AI & Embeddings](https://thenile.dev/docs/ai-embeddings/introduction.md)
+- [Getting started with pgvector](https://thenile.dev/docs/ai-embeddings/vectors/pg_vector.md)
+- [DiskANN](https://thenile.dev/docs/ai-embeddings/vectors/diskann.md): DiskANN index support for PostgreSQL with pgvectorscale
+- [Vector Database](https://thenile.dev/docs/ai-embeddings/vectors/vector_database.md)
+- [Retrieval Augmented Generation (RAG)](https://thenile.dev/docs/ai-embeddings/rag.md)
+- [Embedding Models for RAG](https://thenile.dev/docs/ai-embeddings/embedding_models/overview.md)
+- [Cohere Embedding Models](https://thenile.dev/docs/ai-embeddings/embedding_models/cohere.md)
+- [Embedding Models served by DeepInfra](https://thenile.dev/docs/ai-embeddings/embedding_models/deepinfra.md)
+- [Embedding Models served by Fireworks](https://thenile.dev/docs/ai-embeddings/embedding_models/fireworks.md)
+- [Google Embedding Models](https://thenile.dev/docs/ai-embeddings/embedding_models/google.md)
+- [Open AI Embedding Models](https://thenile.dev/docs/ai-embeddings/embedding_models/open_ai.md)
+- [Voyage Embedding Models](https://thenile.dev/docs/ai-embeddings/embedding_models/voyage.md)
+- [Streaming model responses to the client in real-time](https://thenile.dev/docs/ai-embeddings/streaming.md)
+- [When to use RAG and when to fine-tune a model](https://thenile.dev/docs/ai-embeddings/rag_vs_finetune.md)
+- [Model Context Protocol](https://thenile.dev/docs/ai-embeddings/model_context_protocol.md): Model Context Protocol for Nile
+- [Introduction](https://thenile.dev/docs/cli/introduction.md): Command line interface for managing Nile databases
+- [Connecting to Nile](https://thenile.dev/docs/cli/connect_nile.md)
+- [Interacting with Database](https://thenile.dev/docs/cli/interacting_db.md)
+- [Managing Workspaces](https://thenile.dev/docs/cli/managing_workspaces.md)
+- [Managing Tenants](https://thenile.dev/docs/cli/managing_tenants.md)
+- [Using Authentication](https://thenile.dev/docs/cli/using_auth.md)
+- [Setting Configurations](https://thenile.dev/docs/cli/setting_configs.md)
+- [Local Development](https://thenile.dev/docs/cli/local_development.md)
+- [Global Flags](https://thenile.dev/docs/cli/global-flags.md): Command line flags that can be used with any Nile CLI command
+- [AWS Bedrock](https://thenile.dev/docs/integrations/aws_bedrock.md)
+- [Cohere](https://thenile.dev/docs/integrations/cohere.md)
+- [Confluent Cloud](https://thenile.dev/docs/integrations/confluent.md)
+- [LlamaIndex](https://thenile.dev/docs/integrations/llama_index.md)
+- [Modal](https://thenile.dev/docs/integrations/modal.md)
+- [Netlify](https://thenile.dev/docs/integrations/netlify.md)
+- [Vercel](https://thenile.dev/docs/integrations/vercel.md)
+- [Serverless Multi-tenant Backend with AWS Lambda](https://thenile.dev/docs/integrations/lambda.md)
+- [NextAuth Authentication with Nile](https://thenile.dev/docs/integrations/nextauth.md)
+- [Build SaaS with paid subscriptions - using Nile and Stripe](https://thenile.dev/docs/integrations/stripe.md)
+- [Cloudflare](https://thenile.dev/docs/integrations/cloudflare.md): Deploy globally accelerated B2B applications with Cloudflare Workers and Hyperdrive
+- [BetterAuth](https://thenile.dev/docs/integrations/betterauth.md): Integrate BetterAuth with Postgres
+- [Pipedream](https://thenile.dev/docs/integrations/pipedream.md): Automate customer workflow
+- [Support](https://thenile.dev/docs/support/support.md)
+- [Backup and Restore](https://thenile.dev/docs/support/backup_restore.md)
+- [List dedicated compute instances for a database](https://thenile.dev/docs/api-reference/databases/list-dedicated-compute-instances-for-a-database.md)
+- [Create a dedicated compute instance](https://thenile.dev/docs/api-reference/databases/create-a-dedicated-compute-instance.md)
+- [Describe a dedicated compute instance](https://thenile.dev/docs/api-reference/databases/describe-a-dedicated-compute-instance.md)
+- [Update a dedicated compute instance](https://thenile.dev/docs/api-reference/databases/update-a-dedicated-compute-instance.md): Rename and/or resize a dedicated compute instance.
+- [Delete a dedicated compute instance](https://thenile.dev/docs/api-reference/databases/delete-a-dedicated-compute-instance.md): Removes a compute instance from your database and queues it for deletion. The instance will no longer appear in your Nile dashboard. When deletion is finalized, all data associated with the instance will be deleted.
+- [Lists credentials for a database](https://thenile.dev/docs/api-reference/databases/lists-credentials-for-a-database.md): Lists all credentials that exist for a database. The id of the credential is included in the response, but not the password. Passwords are provided only once, at the time the credential is created, and are encrypted for storage.
+- [Create a database credential](https://thenile.dev/docs/api-reference/databases/create-a-database-credential.md): Generates a new secure credential for a database. The generated password is returned in the response, and is the only time the password is available in plaintext. No request body is required."
+- [Delete a database credential](https://thenile.dev/docs/api-reference/databases/delete-a-database-credential.md): Deletes an existing database credential. No request body is required."
+- [Rotate a database credential](https://thenile.dev/docs/api-reference/databases/rotate-a-database-credential.md): Generates a new credential and schedules existing credentials for deletion after the provided delay.
+- [Claim a database provisioned without auth](https://thenile.dev/docs/api-reference/databases/claim-a-database-provisioned-without-auth.md): Moves the database into the selected workspace if claim code is valid.
+- [List database error metrics](https://thenile.dev/docs/api-reference/databases/list-database-error-metrics.md): Lists bucketed SQL and connection error counts reported by Thoth and Nile Proxy.
+- [List database query performance metrics](https://thenile.dev/docs/api-reference/databases/list-database-query-performance-metrics.md): Lists separately sourced Proxy query rate, Thoth observed query rate, and Thoth P99 query latency for a database.
+- [List databases](https://thenile.dev/docs/api-reference/databases/list-databases.md): Lists all of the databases in a workspace.
+- [Create a database](https://thenile.dev/docs/api-reference/databases/create-a-database.md): Creates a database record in the control plane and triggers creation in the target region. Database names must be less than 64 characters, and unique within a workspace. Names may contain letters (lower or uppercase), numbers, and underscores, and must begin with a letter or underscore.
+- [Get a database](https://thenile.dev/docs/api-reference/databases/get-a-database.md): Gets details of a database.
+- [Rename a database](https://thenile.dev/docs/api-reference/databases/rename-a-database.md): Renames a database in a workspace.
+- [Delete a database](https://thenile.dev/docs/api-reference/databases/delete-a-database.md): Marks a database as deleted and queues its data for deletion. The database will no longer appear in your Nile dashboard. You will be able to connect to it and operate on it while it is queued for deletion, but compute costs still apply.
+- [List database uptime metrics](https://thenile.dev/docs/api-reference/databases/list-database-uptime-metrics.md): Lists time-weighted database uptime derived from PostgreSQL ready-probe samples.
+- [Provision a database without authentication](https://thenile.dev/docs/api-reference/databases/provision-a-database-without-authentication.md): Creates a database and returns connection details plus a 24h claim code.
+- [List available regions](https://thenile.dev/docs/api-reference/databases/list-available-regions.md): Retrieve the list of available region identifiers for a workspace. Identifiers are composed of a prefix indicating the underlying cloud provider followed by a region name in that provider. For example `AWS_US_WEST_2` is associated with the `us-west-2` region (Portland, OR) of AWS.
+- [List developer invites](https://thenile.dev/docs/api-reference/developers/list-developer-invites.md): Lists all developer invites in a workspace
+- [Invite a developer to a workspace](https://thenile.dev/docs/api-reference/developers/invite-a-developer-to-a-workspace.md): Sends an email to another developer with a link that allows them to join the workspace.
+- [Deletes a previously issued invite](https://thenile.dev/docs/api-reference/developers/deletes-a-previously-issued-invite.md)
+- [Identify developer details](https://thenile.dev/docs/api-reference/developers/identify-developer-details.md): Returns information about the developer associated with the token provided, including the workspaces and database ids the developer is authorized to access, and the email address associated with the developer.
+- [Get workspaces metricscompute](https://thenile.dev/docs/api-reference/workspaces/get-workspaces-metricscompute.md): List dedicated compute metrics for a workspace.
+- [List workspaces](https://thenile.dev/docs/api-reference/workspaces/list-workspaces.md): Lists all workspaces that an authenticated developer is authorized to use.
+- [Create a workspace](https://thenile.dev/docs/api-reference/workspaces/create-a-workspace.md): Creates a workspace for the authenticated developer. A workspace slug is generated from the workspace name and used as the workspace identifier. Workspace slugs must be globally unique. Generated slugs will only include ASCII characters. Spaces and non-ASCII characters are replaced with hyphens.
+- [Get workspaces](https://thenile.dev/docs/api-reference/workspaces/get-workspaces.md): Get details about a specific workspace.
+- [Get workspaces compute types](https://thenile.dev/docs/api-reference/workspaces/get-workspaces-compute-types.md): List dedicated compute types available for a workspace.
+- [List developers with access to a workspace](https://thenile.dev/docs/api-reference/workspaces/list-developers-with-access-to-a-workspace.md): List details about the developers authorized to access the workspace.
+- [Remove a developer from a workspace](https://thenile.dev/docs/api-reference/workspaces/remove-a-developer-from-a-workspace.md): Removes a developer from the workspace.
+- [Get current subscription (from DB)](https://thenile.dev/docs/api-reference/workspaces/get-current-subscription-from-db.md): Get details of the current subscription for the given workspace.
+- [Change level (effective now or at timestamp)](https://thenile.dev/docs/api-reference/workspaces/change-level-effective-now-or-at-timestamp.md)
+- [Start a subscription row](https://thenile.dev/docs/api-reference/workspaces/start-a-subscription-row.md)
+- [Close a subscription row at given time (now if omitted)](https://thenile.dev/docs/api-reference/workspaces/close-a-subscription-row-at-given-time-now-if-omitted.md)
+- [Ensure workspace billing customer](https://thenile.dev/docs/api-reference/workspaces/ensure-workspace-billing-customer.md): Find or create the Stripe customer linked to this workspace and return customer-level payment metadata.
+- [Get workspace billing readiness](https://thenile.dev/docs/api-reference/workspaces/get-workspace-billing-readiness.md): Resolve the workspace billing customer without creating one and return local readiness semantics for customer and default payment-method state.
+- [List subscription history (most-recent first)](https://thenile.dev/docs/api-reference/workspaces/list-subscription-history-most-recent-first.md): List all subscription records for the given workspace, most-recent first.
+- [Monthly totals by component, from rated lines](https://thenile.dev/docs/api-reference/workspaces/monthly-totals-by-component-from-rated-lines.md)
+- [Post oauth2token](https://thenile.dev/docs/api-reference/post-oauth2token.md)
+- [Sign in to the application](https://thenile.dev/docs/auth/api-reference/auth/sign-in-to-the-application.md): Authenticates a user and creates a session.
+- [Sign out of the application](https://thenile.dev/docs/auth/api-reference/auth/sign-out-of-the-application.md): Ends the user session.
+- [Get the current session](https://thenile.dev/docs/auth/api-reference/auth/get-the-current-session.md): Returns the session object if the user is authenticated.
+- [Get CSRF token](https://thenile.dev/docs/auth/api-reference/auth/get-csrf-token.md): Returns a CSRF token to be used in subsequent requests.
+- [Get available providers](https://thenile.dev/docs/auth/api-reference/auth/get-available-providers.md): Returns a list of available authentication providers.
+- [Handle provider callback](https://thenile.dev/docs/auth/api-reference/auth/handle-provider-callback.md): Handles the callback from an authentication provider.
+- [Refresh session token](https://thenile.dev/docs/auth/api-reference/auth/refresh-session-token.md): Refreshes the session token to extend the session duration.
+- [Complete an MFA challenge](https://thenile.dev/docs/auth/api-reference/auth/complete-an-mfa-challenge.md): Validates the second-factor code that was issued during login or MFA setup. For login challenges, a new session cookie is issued when the supplied code is valid.
+- [Initiate MFA setup](https://thenile.dev/docs/auth/api-reference/auth/initiate-mfa-setup.md): Begins the multi-factor enrollment flow for the signed-in user by issuing a setup challenge and, when applicable, returning authenticator bootstrap data.
+- [Disable MFA for the current user](https://thenile.dev/docs/auth/api-reference/auth/disable-mfa-for-the-current-user.md): Removes the user's active multi-factor credential. When `requireCode` is set or an email method is configured, the request must include a valid MFA code (and token for email) to confirm ownership.
+- [Retrieve password token](https://thenile.dev/docs/auth/api-reference/auth/retrieve-password-token.md): Responds to a link (probably in an email) by setting a cookie that allows for a password to be reset
+- [Resets the password](https://thenile.dev/docs/auth/api-reference/auth/resets-the-password.md): Based on a cookie, allows a user to reset their password
+- [Reset password](https://thenile.dev/docs/auth/api-reference/auth/reset-password.md): Sends an email for a user to reset their password
+- [Takes in an email verification token and ensures it is valid](https://thenile.dev/docs/auth/api-reference/auth/takes-in-an-email-verification-token-and-ensures-it-is-valid.md)
+- [Sends a verification email](https://thenile.dev/docs/auth/api-reference/auth/sends-a-verification-email.md)
+- [Identify the principal](https://thenile.dev/docs/auth/api-reference/users/identify-the-principal.md): Returns information about the principal associated with the session provided
+- [Update the principal profile](https://thenile.dev/docs/auth/api-reference/users/update-the-principal-profile.md): Update the principal associated with the provided session
+- [Signs up a new user](https://thenile.dev/docs/auth/api-reference/users/signs-up-a-new-user.md): Creates a user in the database and then logs them in.
+- [links an existing user to a tenant](https://thenile.dev/docs/auth/api-reference/users/links-an-existing-user-to-a-tenant.md): A user that already exists is added to a tenant
+- [Unlinks a user from a tenant](https://thenile.dev/docs/auth/api-reference/users/unlinks-a-user-from-a-tenant.md): Marks a user to be deleted from the tenant. It does not remove the user from other tenants or invalidate active sessions.
+- [update a user](https://thenile.dev/docs/auth/api-reference/users/update-a-user.md): Updates a user, provided the authorized user is in the same tenant as that user
+- [a list of tenant users](https://thenile.dev/docs/auth/api-reference/users/a-list-of-tenant-users.md): Returns a list of tenant users from the database
+- [create a new user and assigns them to a tenant](https://thenile.dev/docs/auth/api-reference/users/create-a-new-user-and-assigns-them-to-a-tenant.md): Creates a brand new user on a tenant
+- [lists tenants of user](https://thenile.dev/docs/auth/api-reference/users/lists-tenants-of-user.md): lists the tenants associated with a user
+- [Creates a user](https://thenile.dev/docs/auth/api-reference/users/creates-a-user.md): Adds a brand new user to the database
+- [delete the current user](https://thenile.dev/docs/auth/api-reference/tenants/delete-the-current-user.md): sets the current user for delete.
+- [Accepts a tenant invite](https://thenile.dev/docs/auth/api-reference/tenants/accepts-a-tenant-invite.md): Accepts an invite for a user to join a tenant using the token and email. The invite must be valid and not expired.
+- [Invite a user to a tenant](https://thenile.dev/docs/auth/api-reference/tenants/invite-a-user-to-a-tenant.md): Allows an authenticated tenant member to invite another user via email. The invitee will receive an email and must accept the invitation.
+- [List pending invites for a tenant](https://thenile.dev/docs/auth/api-reference/tenants/list-pending-invites-for-a-tenant.md): Returns all pending invites for a given tenant, accessible by authenticated members of the tenant.
+- [get a tenant](https://thenile.dev/docs/auth/api-reference/tenants/get-a-tenant.md): get information about a tenant
+- [update a tenant](https://thenile.dev/docs/auth/api-reference/tenants/update-a-tenant.md): updates a tenant in the database
+- [delete a tenant](https://thenile.dev/docs/auth/api-reference/tenants/delete-a-tenant.md): sets a tenant for delete in the database
+- [creates a tenant](https://thenile.dev/docs/auth/api-reference/tenants/creates-a-tenant.md): makes a tenant, assigns user to that tenant
+
+## OpenAPI Specs
+
+- [openapi](https://global.thenile.dev/openapi.yaml?v=74222e6)
+- [openapi](https://us-west-2.api.thenile.dev/v2/openapi)
+
+## Optional
+
+- [Pricing](https://www.thenile.dev/pricing)
+- [Templates](https://www.thenile.dev/templates)
+- [Discord](https://discord.com/invite/8UuBB84tTy)
+
+
+This documentation is built and hosted on [Mintlify](https://mintlify.com), a developer documentation platform.

@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-apierror-schema.json",
+  "title": "APIError",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-global-openapi.yml#/components/schemas/APIError",
+  "required": [
+    "errorCode",
+    "message",
+    "statusCode"
+  ],
+  "type": "object",
+  "properties": {
+    "errorCode": {
+      "type": "string",
+      "enum": [
+        "internal_error",
+        "bad_request",
+        "unsupported_operation",
+        "forbidden_operation",
+        "entity_not_found",
+        "duplicate_entity",
+        "invalid_credentials",
+        "unknown_oidc_provider",
+        "unknown_oidc_party",
+        "provider_already_exists",
+        "provider_config_error",
+        "provider_mismatch",
+        "provider_update_error",
+        "provider_disabled",
+        "session_state_missing",
+        "session_state_mismatch",
+        "oidc_code_missing",
+        "tenant_not_found",
+        "constraint_violation",
+        "sql_exception",
+        "db_creation_failure",
+        "db_rename_failure",
+        "db_status_failure",
+        "db_initialization_failure",
+        "db_deletion_failure",
+        "db_config_missing",
+        "unauthorized_workspace_access",
+        "email_send_failure",
+        "jdbc_exception",
+        "oidc_exception",
+        "region_mismatch",
+        "credential_creation_failure",
+        "credential_propagation_failure",
+        "unauthorized_client",
+        "unsupported_response_type",
+        "invalid_request",
+        "server_error",
+        "access_denied",
+        "feature_ineligible",
+        "customer_lookup_failure",
+        "threshold_exceeded",
+        "create_rejected"
+      ]
+    },
+    "message": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "statusCode": {
+      "type": "integer",
+      "format": "int32"
+    }
+  }
+}

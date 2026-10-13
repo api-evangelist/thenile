@@ -1,0 +1,768 @@
+{
+  "@context": {
+    "@vocab": "https://thenile.dev/schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "thenile": "https://thenile.dev/schema#",
+    "PasswordTokenPayload": "thenile:PasswordTokenPayload",
+    "callbackUrl": {
+      "@id": "thenile:callbackUrl",
+      "@type": "xsd:string"
+    },
+    "email": {
+      "@id": "thenile:email",
+      "@type": "xsd:string"
+    },
+    "redirectUrl": {
+      "@id": "thenile:redirectUrl",
+      "@type": "xsd:string"
+    },
+    "ResetPassword": "thenile:ResetPassword",
+    "password": {
+      "@id": "thenile:password",
+      "@type": "xsd:string"
+    },
+    "CreateUser": "thenile:CreateUser",
+    "name": {
+      "@id": "thenile:name",
+      "@type": "xsd:string"
+    },
+    "givenName": {
+      "@id": "thenile:givenName",
+      "@type": "xsd:string"
+    },
+    "familyName": {
+      "@id": "thenile:familyName",
+      "@type": "xsd:string"
+    },
+    "picture": {
+      "@id": "thenile:picture",
+      "@type": "xsd:string"
+    },
+    "LinkUser": "thenile:LinkUser",
+    "id": {
+      "@id": "thenile:id",
+      "@type": "xsd:string"
+    },
+    "UpdateUser": "thenile:UpdateUser",
+    "CreateTenantRequest": "thenile:CreateTenantRequest",
+    "Tenant": "thenile:Tenant",
+    "UpdateTenant": "thenile:UpdateTenant",
+    "User": "thenile:User",
+    "tenants": {
+      "@id": "thenile:tenants",
+      "@container": "@list"
+    },
+    "emailVerified": {
+      "@id": "thenile:emailVerified",
+      "@type": "xsd:dateTime"
+    },
+    "created": {
+      "@id": "thenile:created",
+      "@type": "xsd:dateTime"
+    },
+    "updated": {
+      "@id": "thenile:updated",
+      "@type": "xsd:dateTime"
+    },
+    "TenantUser": "thenile:TenantUser",
+    "MfaVerifyRequest": "thenile:MfaVerifyRequest",
+    "token": {
+      "@id": "thenile:token",
+      "@type": "xsd:string"
+    },
+    "code": {
+      "@id": "thenile:code",
+      "@type": "xsd:string"
+    },
+    "MfaVerifyResponse": "thenile:MfaVerifyResponse",
+    "ok": {
+      "@id": "thenile:ok",
+      "@type": "xsd:boolean"
+    },
+    "scope": {
+      "@id": "thenile:scope",
+      "@type": "xsd:string"
+    },
+    "MfaSetupResponse": "thenile:MfaSetupResponse",
+    "method": {
+      "@id": "thenile:method",
+      "@type": "xsd:string"
+    },
+    "expiresAt": {
+      "@id": "thenile:expiresAt",
+      "@type": "xsd:dateTime"
+    },
+    "otpauthUrl": {
+      "@id": "thenile:otpauthUrl",
+      "@type": "xsd:string"
+    },
+    "secret": {
+      "@id": "thenile:secret",
+      "@type": "xsd:string"
+    },
+    "maskedEmail": {
+      "@id": "thenile:maskedEmail",
+      "@type": "xsd:string"
+    },
+    "MfaDisableRequest": "thenile:MfaDisableRequest",
+    "requireCode": {
+      "@id": "thenile:requireCode",
+      "@type": "xsd:boolean"
+    },
+    "MfaDisableResponse": "thenile:MfaDisableResponse",
+    "APIError": "thenile:APIError",
+    "errorCode": {
+      "@id": "thenile:errorCode",
+      "@type": "xsd:string"
+    },
+    "message": {
+      "@id": "thenile:message",
+      "@type": "xsd:string"
+    },
+    "statusCode": {
+      "@id": "thenile:statusCode",
+      "@type": "xsd:integer"
+    },
+    "TenantSSORegistration": "thenile:TenantSSORegistration",
+    "tenantId": {
+      "@id": "thenile:tenantId",
+      "@type": "xsd:string"
+    },
+    "provider": {
+      "@id": "thenile:provider",
+      "@type": "xsd:string"
+    },
+    "configUrl": {
+      "@id": "thenile:configUrl",
+      "@type": "@id"
+    },
+    "clientId": {
+      "@id": "thenile:clientId",
+      "@type": "xsd:string"
+    },
+    "emailDomains": {
+      "@id": "thenile:emailDomains",
+      "@container": "@list"
+    },
+    "enabled": {
+      "@id": "thenile:enabled",
+      "@type": "xsd:boolean"
+    },
+    "OIDCFormPostView": "thenile:OIDCFormPostView",
+    "LoginUserResponse": "thenile:LoginUserResponse",
+    "Token": "thenile:Token",
+    "jwt": {
+      "@id": "thenile:jwt",
+      "@type": "xsd:string"
+    },
+    "maxAge": {
+      "@id": "thenile:maxAge",
+      "@type": "xsd:integer"
+    },
+    "type": {
+      "@id": "thenile:type",
+      "@type": "xsd:string"
+    },
+    "CreateBasicUserRequest": "thenile:CreateBasicUserRequest",
+    "newTenant": {
+      "@id": "thenile:newTenant",
+      "@type": "xsd:string"
+    },
+    "LoginRequest": "thenile:LoginRequest",
+    "UpdateUserRequest": "thenile:UpdateUserRequest",
+    "LogicalDatabase": "thenile:LogicalDatabase",
+    "status": {
+      "@id": "thenile:status",
+      "@type": "xsd:string"
+    },
+    "sharedPdb": {
+      "@id": "thenile:sharedPdb",
+      "@type": "@id"
+    },
+    "placementStrategy": {
+      "@id": "thenile:placementStrategy",
+      "@type": "xsd:string"
+    },
+    "PhysicalDatabase": "thenile:PhysicalDatabase",
+    "regionId": {
+      "@id": "thenile:regionId",
+      "@type": "xsd:integer"
+    },
+    "pdbId": {
+      "@id": "thenile:pdbId",
+      "@type": "xsd:integer"
+    },
+    "GetDatabaseStatusResponse": "thenile:GetDatabaseStatusResponse",
+    "PrincipalResponse": "thenile:PrincipalResponse",
+    "principalType": {
+      "@id": "thenile:principalType",
+      "@type": "xsd:string"
+    },
+    "ComputeClaimView": "thenile:ComputeClaimView",
+    "host": {
+      "@id": "thenile:host",
+      "@type": "xsd:string"
+    },
+    "database": {
+      "@id": "thenile:database",
+      "@type": "xsd:string"
+    },
+    "deleted": {
+      "@id": "thenile:deleted",
+      "@type": "xsd:string"
+    },
+    "InternalService": "thenile:InternalService",
+    "DatabaseView": "thenile:DatabaseView",
+    "workspaceId": {
+      "@id": "thenile:workspaceId",
+      "@type": "xsd:string"
+    },
+    "workspaceSlug": {
+      "@id": "thenile:workspaceSlug",
+      "@type": "xsd:string"
+    },
+    "sharedRegion": {
+      "@id": "thenile:sharedRegion",
+      "@type": "xsd:integer"
+    },
+    "OIDCProvider": "thenile:OIDCProvider",
+    "authType": {
+      "@id": "thenile:authType",
+      "@type": "xsd:string"
+    },
+    "config": {
+      "@id": "thenile:config",
+      "@type": "@id"
+    },
+    "ttl_sec": {
+      "@id": "thenile:ttl_sec",
+      "@type": "xsd:integer"
+    },
+    "OIDCRelyingParty": "thenile:OIDCRelyingParty",
+    "clientSecret": {
+      "@id": "thenile:clientSecret",
+      "@type": "xsd:string"
+    },
+    "ComputeInstanceType": "thenile:ComputeInstanceType",
+    "computeSize": {
+      "@id": "thenile:computeSize",
+      "@type": "xsd:string"
+    },
+    "memory": {
+      "@id": "thenile:memory",
+      "@type": "xsd:string"
+    },
+    "hourlyCost": {
+      "@id": "thenile:hourlyCost",
+      "@type": "xsd:decimal"
+    },
+    "DatabaseParentResponse": "thenile:DatabaseParentResponse",
+    "DedicatedComputeInstance": "thenile:DedicatedComputeInstance",
+    "instanceId": {
+      "@id": "thenile:instanceId",
+      "@type": "xsd:string"
+    },
+    "workspace": {
+      "@id": "thenile:workspace",
+      "@type": "@id"
+    },
+    "region": {
+      "@id": "thenile:region",
+      "@type": "xsd:string"
+    },
+    "instanceName": {
+      "@id": "thenile:instanceName",
+      "@type": "xsd:string"
+    },
+    "instanceType": {
+      "@id": "thenile:instanceType",
+      "@type": "@id"
+    },
+    "desiredInstanceType": {
+      "@id": "thenile:desiredInstanceType",
+      "@type": "@id"
+    },
+    "GetDatabaseResponse": "thenile:GetDatabaseResponse",
+    "expandable": {
+      "@id": "thenile:expandable",
+      "@type": "xsd:boolean"
+    },
+    "apiHost": {
+      "@id": "thenile:apiHost",
+      "@type": "@id"
+    },
+    "dbHost": {
+      "@id": "thenile:dbHost",
+      "@type": "@id"
+    },
+    "parent": {
+      "@id": "thenile:parent",
+      "@type": "@id"
+    },
+    "Workspace": "thenile:Workspace",
+    "slug": {
+      "@id": "thenile:slug",
+      "@type": "xsd:string"
+    },
+    "stripe_customer_id": {
+      "@id": "thenile:stripe_customer_id",
+      "@type": "xsd:string"
+    },
+    "CreateComputeInstanceRequest": "thenile:CreateComputeInstanceRequest",
+    "instanceSize": {
+      "@id": "thenile:instanceSize",
+      "@type": "xsd:string"
+    },
+    "UpdateComputeInstanceRequest": "thenile:UpdateComputeInstanceRequest",
+    "CreateCredentialResponse": "thenile:CreateCredentialResponse",
+    "tenant": {
+      "@id": "thenile:tenant",
+      "@type": "xsd:string"
+    },
+    "internal": {
+      "@id": "thenile:internal",
+      "@type": "xsd:boolean"
+    },
+    "GetCredentialResponse": "thenile:GetCredentialResponse",
+    "RotateCredentialRequest": "thenile:RotateCredentialRequest",
+    "delayOldSecretsExpirationHours": {
+      "@id": "thenile:delayOldSecretsExpirationHours",
+      "@type": "xsd:decimal"
+    },
+    "reason": {
+      "@id": "thenile:reason",
+      "@type": "xsd:string"
+    },
+    "ClaimDatabaseRequest": "thenile:ClaimDatabaseRequest",
+    "claimDbSession": {
+      "@id": "thenile:claimDbSession",
+      "@type": "xsd:string"
+    },
+    "DatabaseErrorPoint": "thenile:DatabaseErrorPoint",
+    "timestamp": {
+      "@id": "thenile:timestamp",
+      "@type": "xsd:dateTime"
+    },
+    "source": {
+      "@id": "thenile:source",
+      "@type": "xsd:string"
+    },
+    "errorCount": {
+      "@id": "thenile:errorCount",
+      "@type": "xsd:integer"
+    },
+    "DatabaseErrorsResponse": "thenile:DatabaseErrorsResponse",
+    "granularity": {
+      "@id": "thenile:granularity",
+      "@type": "xsd:string"
+    },
+    "points": {
+      "@id": "thenile:points",
+      "@container": "@list"
+    },
+    "DatabaseQueryPerformancePoint": "thenile:DatabaseQueryPerformancePoint",
+    "proxyQueriesPerSecond": {
+      "@id": "thenile:proxyQueriesPerSecond",
+      "@type": "xsd:decimal"
+    },
+    "thothQueriesPerSecond": {
+      "@id": "thenile:thothQueriesPerSecond",
+      "@type": "xsd:decimal"
+    },
+    "thothP99LatencyMs": {
+      "@id": "thenile:thothP99LatencyMs",
+      "@type": "xsd:decimal"
+    },
+    "thothCpuMilliseconds": {
+      "@id": "thenile:thothCpuMilliseconds",
+      "@type": "xsd:decimal"
+    },
+    "DatabaseQueryPerformanceResponse": "thenile:DatabaseQueryPerformanceResponse",
+    "CreateDatabaseRequest": "thenile:CreateDatabaseRequest",
+    "databaseName": {
+      "@id": "thenile:databaseName",
+      "@type": "xsd:string"
+    },
+    "UpdateDatabaseRequest": "thenile:UpdateDatabaseRequest",
+    "DatabaseUptimePoint": "thenile:DatabaseUptimePoint",
+    "uptimePercentage": {
+      "@id": "thenile:uptimePercentage",
+      "@type": "xsd:decimal"
+    },
+    "uptimeSeconds": {
+      "@id": "thenile:uptimeSeconds",
+      "@type": "xsd:integer"
+    },
+    "observedSeconds": {
+      "@id": "thenile:observedSeconds",
+      "@type": "xsd:integer"
+    },
+    "DatabaseUptimeResponse": "thenile:DatabaseUptimeResponse",
+    "calculation": {
+      "@id": "thenile:calculation",
+      "@type": "xsd:string"
+    },
+    "summary": {
+      "@id": "thenile:summary",
+      "@type": "@id"
+    },
+    "DatabaseUptimeSummary": "thenile:DatabaseUptimeSummary",
+    "UnauthenticatedProvisionDatabaseResponse": "thenile:UnauthenticatedProvisionDatabaseResponse",
+    "databaseId": {
+      "@id": "thenile:databaseId",
+      "@type": "xsd:string"
+    },
+    "sharded": {
+      "@id": "thenile:sharded",
+      "@type": "xsd:boolean"
+    },
+    "credentialId": {
+      "@id": "thenile:credentialId",
+      "@type": "xsd:string"
+    },
+    "env": {
+      "@id": "thenile:env"
+    },
+    "UnauthenticatedProvisionDatabaseRequest": "thenile:UnauthenticatedProvisionDatabaseRequest",
+    "Developer": "thenile:Developer",
+    "workspaces": {
+      "@id": "thenile:workspaces",
+      "@container": "@list"
+    },
+    "databases": {
+      "@id": "thenile:databases",
+      "@container": "@list"
+    },
+    "kind": {
+      "@id": "thenile:kind",
+      "@type": "xsd:string"
+    },
+    "DeveloperInvite": "thenile:DeveloperInvite",
+    "sender": {
+      "@id": "thenile:sender",
+      "@type": "@id"
+    },
+    "verificationState": {
+      "@id": "thenile:verificationState",
+      "@type": "xsd:string"
+    },
+    "DeveloperInviteWithCode": "thenile:DeveloperInviteWithCode",
+    "CreateInviteRequest": "thenile:CreateInviteRequest",
+    "programmatic": {
+      "@id": "thenile:programmatic",
+      "@type": "xsd:boolean"
+    },
+    "DatabaseComputeUsage": "thenile:DatabaseComputeUsage",
+    "usageByInstance": {
+      "@id": "thenile:usageByInstance"
+    },
+    "totalVCPUHours": {
+      "@id": "thenile:totalVCPUHours",
+      "@type": "xsd:decimal"
+    },
+    "start": {
+      "@id": "thenile:start",
+      "@type": "xsd:dateTime"
+    },
+    "end": {
+      "@id": "thenile:end",
+      "@type": "xsd:dateTime"
+    },
+    "InstancePeriodComputeUsage": "thenile:InstancePeriodComputeUsage",
+    "size": {
+      "@id": "thenile:size",
+      "@type": "xsd:string"
+    },
+    "spans": {
+      "@id": "thenile:spans",
+      "@container": "@list"
+    },
+    "TimeSeriesPoint": "thenile:TimeSeriesPoint",
+    "x": {
+      "@id": "thenile:x",
+      "@type": "xsd:integer"
+    },
+    "y": {
+      "@id": "thenile:y",
+      "@type": "xsd:decimal"
+    },
+    "UsageChartData": "thenile:UsageChartData",
+    "maxCPUCount": {
+      "@id": "thenile:maxCPUCount",
+      "@type": "xsd:decimal"
+    },
+    "WorkspaceComputeUsage": "thenile:WorkspaceComputeUsage",
+    "usageByDatabase": {
+      "@id": "thenile:usageByDatabase"
+    },
+    "chartData": {
+      "@id": "thenile:chartData",
+      "@type": "@id"
+    },
+    "CreateWorkspaceRequest": "thenile:CreateWorkspaceRequest",
+    "Point": "thenile:Point",
+    "bucket": {
+      "@id": "thenile:bucket",
+      "@type": "xsd:dateTime"
+    },
+    "totalCents": {
+      "@id": "thenile:totalCents",
+      "@type": "xsd:decimal"
+    },
+    "StorageCoverage": "thenile:StorageCoverage",
+    "coveredSeconds": {
+      "@id": "thenile:coveredSeconds",
+      "@type": "xsd:integer"
+    },
+    "expectedSeconds": {
+      "@id": "thenile:expectedSeconds",
+      "@type": "xsd:integer"
+    },
+    "unmeasuredSeconds": {
+      "@id": "thenile:unmeasuredSeconds",
+      "@type": "xsd:integer"
+    },
+    "lastSampleTime": {
+      "@id": "thenile:lastSampleTime",
+      "@type": "xsd:dateTime"
+    },
+    "longestGapSeconds": {
+      "@id": "thenile:longestGapSeconds",
+      "@type": "xsd:integer"
+    },
+    "policyVersion": {
+      "@id": "thenile:policyVersion",
+      "@type": "xsd:integer"
+    },
+    "WorkspaceBillingHistoryDto": "thenile:WorkspaceBillingHistoryDto",
+    "ym": {
+      "@id": "thenile:ym",
+      "@type": "xsd:string"
+    },
+    "totals": {
+      "@id": "thenile:totals"
+    },
+    "partial": {
+      "@id": "thenile:partial",
+      "@type": "xsd:boolean"
+    },
+    "storage": {
+      "@id": "thenile:storage",
+      "@type": "@id"
+    },
+    "WorkspaceBillingCustomerDto": "thenile:WorkspaceBillingCustomerDto",
+    "stripeCustomerId": {
+      "@id": "thenile:stripeCustomerId",
+      "@type": "xsd:string"
+    },
+    "defaultPaymentMethod": {
+      "@id": "thenile:defaultPaymentMethod",
+      "@type": "xsd:string"
+    },
+    "WorkspaceBillingReadinessDto": "thenile:WorkspaceBillingReadinessDto",
+    "defaultPaymentMethodId": {
+      "@id": "thenile:defaultPaymentMethodId",
+      "@type": "xsd:string"
+    },
+    "checkedAt": {
+      "@id": "thenile:checkedAt",
+      "@type": "xsd:dateTime"
+    },
+    "lastError": {
+      "@id": "thenile:lastError",
+      "@type": "xsd:string"
+    },
+    "detail": {
+      "@id": "thenile:detail",
+      "@type": "xsd:string"
+    },
+    "WorkspaceSubscriptionDto": "thenile:WorkspaceSubscriptionDto",
+    "level": {
+      "@id": "thenile:level",
+      "@type": "xsd:string"
+    },
+    "validFrom": {
+      "@id": "thenile:validFrom",
+      "@type": "xsd:dateTime"
+    },
+    "validTo": {
+      "@id": "thenile:validTo",
+      "@type": "xsd:dateTime"
+    },
+    "subscriptionId": {
+      "@id": "thenile:subscriptionId",
+      "@type": "xsd:string"
+    },
+    "Allowance": "thenile:Allowance",
+    "component": {
+      "@id": "thenile:component",
+      "@type": "xsd:string"
+    },
+    "quantity": {
+      "@id": "thenile:quantity",
+      "@type": "xsd:decimal"
+    },
+    "unit": {
+      "@id": "thenile:unit",
+      "@type": "xsd:string"
+    },
+    "Rate": "thenile:Rate",
+    "amountCents": {
+      "@id": "thenile:amountCents",
+      "@type": "xsd:decimal"
+    },
+    "UsagePricing": "thenile:UsagePricing",
+    "model": {
+      "@id": "thenile:model",
+      "@type": "xsd:string"
+    },
+    "currency": {
+      "@id": "thenile:currency",
+      "@type": "xsd:string"
+    },
+    "usageThrough": {
+      "@id": "thenile:usageThrough",
+      "@type": "xsd:dateTime"
+    },
+    "effectiveFrom": {
+      "@id": "thenile:effectiveFrom",
+      "@type": "xsd:dateTime"
+    },
+    "estimated": {
+      "@id": "thenile:estimated",
+      "@type": "xsd:boolean"
+    },
+    "rates": {
+      "@id": "thenile:rates",
+      "@container": "@list"
+    },
+    "monthlyAllowances": {
+      "@id": "thenile:monthlyAllowances",
+      "@container": "@list"
+    },
+    "WorkspaceMonthlyTotalsDto": "thenile:WorkspaceMonthlyTotalsDto",
+    "pricing": {
+      "@id": "thenile:pricing",
+      "@type": "@id"
+    },
+    "ComputeUsage": "thenile:ComputeUsage",
+    "instanceCount": {
+      "@id": "thenile:instanceCount",
+      "@type": "xsd:integer"
+    },
+    "CpuPoint": "thenile:CpuPoint",
+    "milliseconds": {
+      "@id": "thenile:milliseconds",
+      "@type": "xsd:decimal"
+    },
+    "CpuUsage": "thenile:CpuUsage",
+    "totalMilliseconds": {
+      "@id": "thenile:totalMilliseconds",
+      "@type": "xsd:decimal"
+    },
+    "databaseCount": {
+      "@id": "thenile:databaseCount",
+      "@type": "xsd:integer"
+    },
+    "reportingDatabaseCount": {
+      "@id": "thenile:reportingDatabaseCount",
+      "@type": "xsd:integer"
+    },
+    "MetricComputeUsage": "thenile:MetricComputeUsage",
+    "data": {
+      "@id": "thenile:data",
+      "@type": "@id"
+    },
+    "unavailableDatabaseIds": {
+      "@id": "thenile:unavailableDatabaseIds",
+      "@container": "@list"
+    },
+    "MetricCpuUsage": "thenile:MetricCpuUsage",
+    "MetricStorageHistory": "thenile:MetricStorageHistory",
+    "MetricStorageUsage": "thenile:MetricStorageUsage",
+    "StorageHistory": "thenile:StorageHistory",
+    "StoragePoint": "thenile:StoragePoint",
+    "totalBytes": {
+      "@id": "thenile:totalBytes",
+      "@type": "xsd:integer"
+    },
+    "StorageUsage": "thenile:StorageUsage",
+    "activeBytes": {
+      "@id": "thenile:activeBytes",
+      "@type": "xsd:integer"
+    },
+    "derivedBytes": {
+      "@id": "thenile:derivedBytes",
+      "@type": "xsd:integer"
+    },
+    "historyBytes": {
+      "@id": "thenile:historyBytes",
+      "@type": "xsd:integer"
+    },
+    "logicalBytes": {
+      "@id": "thenile:logicalBytes",
+      "@type": "xsd:integer"
+    },
+    "billableBytes": {
+      "@id": "thenile:billableBytes",
+      "@type": "xsd:integer"
+    },
+    "oldestCollectedAt": {
+      "@id": "thenile:oldestCollectedAt",
+      "@type": "xsd:dateTime"
+    },
+    "newestCollectedAt": {
+      "@id": "thenile:newestCollectedAt",
+      "@type": "xsd:dateTime"
+    },
+    "WorkspaceUsageResponse": "thenile:WorkspaceUsageResponse",
+    "version": {
+      "@id": "thenile:version",
+      "@type": "xsd:integer"
+    },
+    "asOf": {
+      "@id": "thenile:asOf",
+      "@type": "xsd:dateTime"
+    },
+    "cpu": {
+      "@id": "thenile:cpu",
+      "@type": "@id"
+    },
+    "compute": {
+      "@id": "thenile:compute",
+      "@type": "@id"
+    },
+    "storageHistory": {
+      "@id": "thenile:storageHistory",
+      "@type": "@id"
+    },
+    "TokenResponse": "thenile:TokenResponse",
+    "token_type": {
+      "@id": "thenile:token_type",
+      "@type": "xsd:string"
+    },
+    "access_token": {
+      "@id": "thenile:access_token",
+      "@type": "xsd:string"
+    },
+    "refresh_token": {
+      "@id": "thenile:refresh_token",
+      "@type": "xsd:string"
+    },
+    "expires_in": {
+      "@id": "thenile:expires_in",
+      "@type": "xsd:integer"
+    }
+  },
+  "@type": "schema:Dataset",
+  "schema:name": "Nile API JSON-LD context",
+  "schema:description": "A JSON-LD @context for the objects Nile's own API contract declares: one class per component schema, one property per declared field, typed from the contract. Derived by script (derive-json-ld.py, 2026-10-13) from openapi/thenile-auth-openapi.yml, openapi/thenile-database-openapi.yml, openapi/thenile-global-openapi.yml.",
+  "dcterms:created": "2026-10-13",
+  "dcterms:source": [
+    "openapi/thenile-auth-openapi.yml",
+    "openapi/thenile-database-openapi.yml",
+    "openapi/thenile-global-openapi.yml"
+  ]
+}

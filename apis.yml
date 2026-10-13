@@ -1,23 +1,186 @@
 aid: thenile
 name: Nile
-description: 'Nile is a company surfaced via the API Evangelist harvest backlog (source: market-gap:databases-postgres)
-  and added to the network as a stub for full-pipeline profiling.'
+description: Nile is a serverless PostgreSQL platform re-engineered for multi-tenant
+  B2B applications, offering virtual tenant databases, tenant isolation, vector embeddings,
+  and built-in user and tenant authentication (Nile Auth). Its control-plane REST
+  API manages workspaces, databases, credentials, regions and billing, a database
+  API manages tenants, users and OIDC providers, and a regional auth API powers sign-in,
+  sessions and tenant membership.
 url: https://raw.githubusercontent.com/api-evangelist/thenile/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:market-gap:databases-postgres
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment pass 2026-10-13 (local-v5; was harvest)
 specificationVersion: '0.20'
 created: '2026-10-13'
 modified: '2026-10-13'
 tags:
 - Company
-apis: []
+- Databases
+- PostgreSQL
+- Serverless
+- Multi-Tenant
+- Authentication
+- B2B SaaS
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+image: https://www.thenile.dev/favicon.ico
 common:
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/thenile-docs-llms.txt
+- type: AgenticAccess
+  url: agentic-access/thenile-agentic-access.yml
+- type: Plans
+  url: plans/thenile-plans-pricing.yml
+- type: Spectral
+  url: rules/thenile-rules.yml
+- type: JSONLD
+  url: json-ld/thenile-context.jsonld
+- type: Vocabulary
+  url: vocabulary/thenile-vocabulary.yml
+- type: DataModel
+  url: data-model/thenile-data-model.yml
+- type: CLI
+  url: cli/thenile-cli.yml
+- type: ErrorCatalog
+  url: errors/thenile-problem-types.yml
+- type: Conformance
+  url: conformance/thenile-conformance.yml
+- type: LLMsTxt
+  url: llms/thenile-llms.txt
+- type: ToolCrosswalk
+  url: mcp/thenile-tool-crosswalk.yml
+- type: MCPServer
+  url: mcp/thenile-mcp.yml
+- type: WellKnown
+  url: well-known/thenile-well-known.yml
+- type: Hosts
+  url: hosts/thenile-hosts.yml
+- type: Vendors
+  url: vendors/thenile-vendors.yml
+- type: SDKs
+  url: packages/thenile-packages.yml
+- type: Packages
+  url: packages/thenile-packages.yml
+- type: Authentication
+  url: authentication/thenile-authentication.yml
+- type: DomainSecurity
+  url: security/thenile-domain-security.yml
 - type: Website
   url: https://www.thenile.dev
+- type: Documentation
+  url: https://www.thenile.dev/docs
+- type: APIReference
+  url: https://www.thenile.dev/docs/api-reference/post-oauth2token
+- type: GettingStarted
+  url: https://www.thenile.dev/docs/getting-started
+- type: Blog
+  url: https://www.thenile.dev/blog
+- type: GitHubOrganization
+  url: https://github.com/niledatabase
+- type: Pricing
+  url: https://www.thenile.dev/pricing
+- type: Login
+  url: https://dashboard.thenile.dev/
+- type: SignUp
+  url: https://console.thenile.dev
+- type: PrivacyPolicy
+  url: https://www.thenile.dev/privacy-policy
+- type: TermsOfService
+  url: https://www.thenile.dev/terms-of-service
+apis:
+- aid: thenile:nile-global-api
+  name: Nile Global API
+  description: Control-plane API for Nile workspaces, database provisioning, regions,
+    developer accounts and OAuth2 tokens, served from global.thenile.dev.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - Workspaces
+  - Databases
+  - Billing
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-global-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://global.thenile.dev/openapi.json
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+- aid: thenile:nile-database-api
+  name: Nile Database API
+  description: 'API for managing a Nile database: tenants, users, credentials, metrics
+    and auth OIDC providers and relying parties. Spec published at api.thenile.dev/openapi.json
+    (its servers[] names global.thenile.dev).'
+  humanURL: https://www.thenile.dev/docs/api-reference
+  baseURL: https://global.thenile.dev
+  tags:
+  - Tenants
+  - Users
+  - Databases
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-database-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://api.thenile.dev/openapi.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+- aid: thenile:nile-auth-api
+  name: Nile Auth API
+  description: Regional Nile Auth API for sign-in, sign-up, sessions, password reset,
+    tenants and users scoped to a database, served per region (us-west-2.api.thenile.dev).
+  humanURL: https://www.thenile.dev/docs/auth/introduction
+  baseURL: https://us-west-2.api.thenile.dev
+  tags:
+  - Authentication
+  - Users
+  - Tenants
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-auth-openapi.yml
+  - type: OpenAPI
+    name: OpenAPI (provider-hosted)
+    url: https://us-west-2.api.thenile.dev/v2/openapi
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+x-enrichment:
+  date: '2026-10-13'
+  status: enriched
+  artifacts_added: 20
+  pass: local-v5

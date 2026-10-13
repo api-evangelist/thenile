@@ -1,0 +1,127 @@
+generated: '2026-10-13'
+method: derived
+source: the pre-flight dossier, apis.yml pointers, spec servers, well-known, vendors -- nothing fetched here
+generator: derive-hosts.py
+summary:
+  hosts: 9
+  own: 7
+  other_domain: 1
+  platform: 1
+  roles:
+  - api
+  - identity
+  - other
+  - source
+  - website
+hosts:
+- host: accounts.google.com
+  found_by:
+  - docs-index
+  types: []
+  serves:
+  - docs
+  registrable_domain: google.com
+  role: identity
+  relation: other-domain
+- host: api.thenile.dev
+  found_by:
+  - contract-discovery
+  types: []
+  serves: []
+  registrable_domain: thenile.dev
+  role: api
+  relation: own
+- host: console.thenile.dev
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - SignUp
+  serves: []
+  registrable_domain: thenile.dev
+  role: identity
+  relation: own
+- host: dashboard.thenile.dev
+  found_by:
+  - pointer
+  - probed
+  - site-links
+  - contract-discovery
+  - well-known
+  types:
+  - Login
+  serves: []
+  registrable_domain: thenile.dev
+  role: identity
+  relation: own
+- host: github.com
+  found_by:
+  - pointer
+  types:
+  - GitHubOrganization
+  serves: []
+  registrable_domain: github.com
+  role: source
+  relation: platform
+- host: global.thenile.dev
+  found_by:
+  - apis[]
+  - probed
+  - site-links
+  - spec-found
+  - contract-discovery
+  - well-known
+  types: []
+  serves:
+  - api
+  - spec
+  registrable_domain: thenile.dev
+  role: other
+  relation: own
+- host: trust.thenile.dev
+  found_by:
+  - probed
+  - site-links
+  - well-known
+  types: []
+  serves: []
+  registrable_domain: thenile.dev
+  role: other
+  relation: own
+- host: us-west-2.api.thenile.dev
+  found_by:
+  - apis[]
+  types: []
+  serves:
+  - api
+  registrable_domain: thenile.dev
+  role: api
+  relation: own
+- host: www.thenile.dev
+  found_by:
+  - pointer
+  - apis[]
+  - probed
+  - docs-index
+  - contract-discovery
+  - well-known
+  - vendor-detect
+  types:
+  - Website
+  - Documentation
+  - APIReference
+  - GettingStarted
+  - Blog
+  - Pricing
+  - PrivacyPolicy
+  - TermsOfService
+  serves:
+  - docs
+  - hosting
+  vendor: vercel
+  registrable_domain: thenile.dev
+  role: website
+  relation: own

@@ -1,0 +1,21 @@
+generated: '2026-10-13'
+method: generated
+generator: finish-artifacts.py (index from skill frontmatter)
+source: skills/*.md frontmatter; every operationId checked against openapi/
+skills:
+- file: skills/thenile-manage-tenant-users.md
+  name: thenile-manage-tenant-users
+  api: thenile:nile-database-api
+  operations:
+  - listTenants
+  - getTenant
+  - createTenantUser
+  - listTenantUsers
+- file: skills/thenile-provision-database.md
+  name: thenile-provision-database
+  api: thenile:nile-global-api
+  operations:
+  - listRegions
+  - createDatabase
+  - getDatabase
+  - createCredential

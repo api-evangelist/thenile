@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-mfa-setup-response-schema.json",
+  "title": "MfaSetupResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-auth-openapi.yml#/components/schemas/MfaSetupResponse",
+  "type": "object",
+  "required": [
+    "ok",
+    "method",
+    "token",
+    "expiresAt",
+    "scope"
+  ],
+  "properties": {
+    "ok": {
+      "type": "boolean"
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "authenticator",
+        "email"
+      ]
+    },
+    "token": {
+      "type": "string"
+    },
+    "expiresAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "setup"
+      ]
+    },
+    "otpauthUrl": {
+      "type": "string",
+      "description": "Present when the user is enrolling an authenticator app."
+    },
+    "secret": {
+      "type": "string",
+      "description": "Base32 secret returned for authenticator enrollment."
+    },
+    "maskedEmail": {
+      "type": "string",
+      "description": "Masked email address used for email OTP delivery."
+    }
+  }
+}

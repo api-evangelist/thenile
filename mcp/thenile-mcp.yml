@@ -1,0 +1,28 @@
+generated: '2026-10-13'
+method: searched
+source: https://www.thenile.dev/blog/2025-03-11-introducing-nile-mcp
+name: Nile MCP Server
+status: published
+deployment:
+  mode: local-stdio
+  install: npm install @niledatabase/nile-mcp-server
+  package: https://www.npmjs.com/package/@niledatabase/nile-mcp-server
+  auth: api-key
+  verified: searched
+  note: Blog states the server "supports both the STDIO and SSE modes"; SSE is self-run, not a hosted endpoint. npm latest 1.4.0 (2025-03-10). dashboard.thenile.dev/mcp answered 401 to an anonymous tools/list (2026-10-13); not documented as a public MCP endpoint, so not recorded as remote.
+repository: https://github.com/niledatabase/nile-mcp-server
+tools_source: documented (names published in the announcement blog post; no live tools/list was called)
+tools:
+- {name: create-database}
+- {name: list-databases}
+- {name: get-database}
+- {name: delete-database}
+- {name: list-credentials}
+- {name: create-credential}
+- {name: list-regions}
+- {name: execute-sql}
+- {name: list-resources}
+- {name: read-resource}
+- {name: create-tenant}
+- {name: list-tenants}
+- {name: delete-tenant}

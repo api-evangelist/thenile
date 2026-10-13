@@ -1,0 +1,25 @@
+generated: '2026-10-13'
+method: derived
+source: openapi/thenile-auth-openapi.yml, openapi/thenile-database-openapi.yml, openapi/thenile-global-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - cookie
+schemes:
+- name: sessionCookie
+  type: apiKey
+  in: cookie
+  parameter: nile-auth.session-token
+  description: Session token stored in a cookie after user signs in, prefixed with __Secure
+    if on https
+  sources:
+  - openapi/thenile-auth-openapi.yml
+- name: jwtBearerAuth
+  type: http
+  scheme: bearer
+  bearerFormat: JWT
+  sources:
+  - openapi/thenile-database-openapi.yml
+  - openapi/thenile-global-openapi.yml

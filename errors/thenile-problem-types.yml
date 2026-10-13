@@ -1,0 +1,90 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-problem-types.py
+source:
+- openapi/thenile-auth-openapi.yml
+- openapi/thenile-database-openapi.yml
+- openapi/thenile-global-openapi.yml
+format: custom
+envelope:
+  media_type: application/json
+  schema: APIError
+coverage:
+  operations: 137
+  statuses_declared: 10
+problems:
+- status: 400
+  title: Bad Request
+  description: API/Database failures
+  operations: 32
+  media_types:
+  - text/plain
+  - application/json
+  schema: APIError
+- status: 401
+  title: Unauthorized
+  description: Unauthorized
+  operations: 102
+  media_types:
+  - application/json
+  - text/plain
+  schema: APIError
+- status: 403
+  title: Forbidden
+  description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+  operations: 25
+  media_types:
+  - application/json
+  - text/plain
+  schema: APIError
+- status: 404
+  title: Not Found
+  description: Not found
+  operations: 77
+  media_types:
+  - application/json
+  - text/plain
+  schema: APIError
+- status: 409
+  title: Conflict
+  description: Provider already exists
+  operations: 7
+  media_types:
+  - application/json
+  schema: APIError
+- status: 410
+  title: Gone
+  description: MFA challenge has expired.
+  operations: 3
+  media_types:
+  - text/plain
+  schema: APIError
+- status: 500
+  title: Internal Server Error
+  description: Unexpected server error.
+  operations: 7
+  media_types:
+  - text/plain
+  - application/json
+  schema: APIError
+- status: 502
+  title: Bad Gateway
+  description: Provider configuration does not match host URL
+  operations: 10
+  media_types:
+  - application/json
+  schema: APIError
+- status: 503
+  title: Service Unavailable
+  description: Tinybird telemetry is not configured.
+  operations: 3
+  media_types:
+  - application/json
+  schema: APIError
+- status: default
+  title: null
+  description: default response
+  operations: 2
+  media_types:
+  - application/json
+  schema: null

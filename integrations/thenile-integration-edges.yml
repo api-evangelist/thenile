@@ -1,0 +1,18 @@
+generated: '2026-10-13'
+method: none
+source:
+- https://zapier.com/apps/thenile/integrations
+- https://zapier.com/apps/nile/integrations
+- https://n8n.io/integrations/thenile/
+- https://composio.dev/toolkits/thenile
+- https://monid.ai/tools/thenile
+checked:
+- https://composio.dev/toolkits/thenile
+- https://monid.ai/tools/thenile
+- https://n8n.io/integrations/thenile/
+- https://zapier.com/apps/nile/integrations
+- https://zapier.com/apps/thenile/integrations
+summary: null
+marketplace_apps: []
+edges: []
+templates: []

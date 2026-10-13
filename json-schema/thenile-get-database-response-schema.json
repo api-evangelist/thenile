@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-get-database-response-schema.json",
+  "title": "GetDatabaseResponse",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-global-openapi.yml#/components/schemas/GetDatabaseResponse",
+  "required": [
+    "expandable",
+    "id",
+    "name",
+    "region",
+    "status",
+    "workspace"
+  ],
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "minLength": 1,
+      "type": "string"
+    },
+    "workspace": {
+      "$ref": "#/$defs/Workspace"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "REQUESTED",
+        "BUILT",
+        "POOLED",
+        "READY"
+      ]
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "AWS_US_WEST_2",
+        "AWS_US_EAST_1",
+        "AWS_EU_CENTRAL_1",
+        "AZURE_EASTUS"
+      ]
+    },
+    "expandable": {
+      "type": "boolean"
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deleted": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "apiHost": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Public database API URL; Since it is only used for tenants/users management, it is null for un-sharded databases.",
+      "format": "uri"
+    },
+    "dbHost": {
+      "type": "string",
+      "format": "uri"
+    },
+    "parent": {
+      "$ref": "#/$defs/DatabaseParentResponse"
+    }
+  },
+  "$defs": {
+    "DatabaseParentResponse": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        }
+      }
+    },
+    "Workspace": {
+      "required": [
+        "name",
+        "slug"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "slug": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "stripe_customer_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

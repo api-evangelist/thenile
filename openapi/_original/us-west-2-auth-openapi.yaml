@@ -1,0 +1,1816 @@
+openapi: 3.0.0
+info:
+  title: Nile auth API
+  version: "0.1"
+paths:
+  /v2/databases/{database}/auth/signin:
+    post:
+      tags:
+        - auth
+      summary: Sign in to the application
+      description: Authenticates a user and creates a session.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: yourpassword
+              required:
+                - email
+                - password
+      responses:
+        "200":
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+  /v2/databases/{database}/auth/signout:
+    post:
+      tags:
+        - auth
+      summary: Sign out of the application
+      description: Ends the user session.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "200":
+          description: Successful sign out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signed out
+  /v2/databases/{database}/auth/session:
+    get:
+      tags:
+        - auth
+      summary: Get the current session
+      description: Returns the session object if the user is authenticated.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "200":
+          description: The current session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+                  expires:
+                    type: string
+                    format: date-time
+                    example: 2024-07-16T19:20:30.45Z
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+  /v2/databases/{database}/auth/csrf:
+    get:
+      tags:
+        - auth
+      summary: Get CSRF token
+      description: Returns a CSRF token to be used in subsequent requests.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "200":
+          description: CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  csrfToken:
+                    type: string
+                    example: abc123
+  /v2/databases/{database}/auth/providers:
+    get:
+      tags:
+        - auth
+      summary: Get available providers
+      description: Returns a list of available authentication providers.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "200":
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: github
+                    name:
+                      type: string
+                      example: GitHub
+                    type:
+                      type: string
+                      example: oauth
+  /v2/databases/{database}/auth/callback/{provider}:
+    post:
+      tags:
+        - auth
+      summary: Handle provider callback
+      description: Handles the callback from an authentication provider.
+      parameters:
+        - $ref: "#/components/parameters/database"
+        - $ref: "#/components/parameters/provider"
+      responses:
+        "200":
+          description: Successful callback
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+  /v2/databases/{database}/auth/session/token:
+    post:
+      tags:
+        - auth
+      summary: Refresh session token
+      description: Refreshes the session token to extend the session duration.
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "200":
+          description: Session token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+                  expires:
+                    type: string
+                    format: date-time
+                    example: 2024-07-16T19:20:30.45Z
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+  /v2/databases/{database}/auth/mfa:
+    put:
+      tags:
+        - auth
+      summary: Complete an MFA challenge
+      description: >
+        Validates the second-factor code that was issued during login or MFA
+        setup. For login challenges, a new session cookie is issued when the
+        supplied code is valid.
+      operationId: verifyMfaChallenge
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/database"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MfaVerifyRequest"
+      responses:
+        "200":
+          description: MFA challenge was satisfied.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MfaVerifyResponse"
+        "400":
+          description: Invalid request payload or unsupported challenge.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: Provided MFA code was not valid.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "404":
+          description: MFA challenge was not found.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "410":
+          description: MFA challenge has expired.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "500":
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+    delete:
+      tags:
+        - auth
+      summary: Disable MFA for the current user
+      description: >
+        Removes the user's active multi-factor credential. When `requireCode` is
+        set or an email method is configured, the request must include a valid
+        MFA code (and token for email) to confirm ownership.
+      operationId: disableMfa
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/database"
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MfaDisableRequest"
+      responses:
+        "200":
+          description: MFA was disabled successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MfaDisableResponse"
+        "400":
+          description: Invalid request payload or MFA is not enabled.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: User is not authenticated or provided code was invalid.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "403":
+          description: Provided token does not match the current user.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "404":
+          description: The user or challenge token could not be found.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "410":
+          description: The provided challenge token has expired.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "500":
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+    post:
+      tags:
+        - auth
+      summary: Initiate MFA setup
+      description: Begins the multi-factor enrollment flow for the signed-in user by
+        issuing a setup challenge and, when applicable, returning authenticator
+        bootstrap data.
+      operationId: initiateMfaSetup
+      security:
+        - sessionCookie: []
+      parameters:
+        - $ref: "#/components/parameters/database"
+      responses:
+        "201":
+          description: MFA setup challenge created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MfaSetupResponse"
+        "400":
+          description: MFA setup is not enabled for this user or the request cannot be
+            processed.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "401":
+          description: User is not authenticated.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+        "500":
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: "#/components/schemas/APIError"
+  /v2/databases/{database}/auth/reset-password:
+    post:
+      tags:
+        - auth
+      summary: Reset password
+      description: Sends an email for a user to reset their password
+      operationId: generatePasswordToken
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: json
+          in: query
+          description: set to `true` if you want json back (useful for reset password for
+            authenticated users)
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordTokenPayload"
+      responses:
+        "200":
+          description: Nothing happened
+        "201":
+          description: Token created and email sent to user
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Missing csrf
+          content:
+            text/plain:
+              schema:
+                type: string
+    get:
+      tags:
+        - auth
+      summary: Retrieve password token
+      description: Responds to a link (probably in an email) by setting a cookie that
+        allows for a password to be reset
+      operationId: validatePasswordToken
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: callbackUrl
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: redirect
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Token has been sent to the client via cookie, if possible
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+    put:
+      tags:
+        - auth
+      summary: Resets the password
+      description: Based on a cookie, allows a user to reset their password
+      operationId: resetPassword
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ResetPassword"
+      responses:
+        "200":
+          description: Token has been sent to the client via cookie, if possible
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v2/databases/{database}/auth/verify-email:
+    get:
+      tags:
+        - auth
+      summary: Takes in an email verification token and ensures it is valid
+      operationId: verifyEmail
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: identifier
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: callbackUrl
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Token has been sent to the client via cookie, if possible
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+    post:
+      tags:
+        - auth
+      summary: Sends a verification email
+      operationId: sendVerificationEmail
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                callbackUrl:
+                  type: string
+                  format: uri
+                  description: URL the user is sent to after resetting
+                  example: https://example.com/callback
+                csrfToken:
+                  type: string
+                  description: CSRF protection token
+                redirectUrl:
+                  type: string
+                  format: uri
+                  description: Optional post-auth redirect
+                  example: https://example.com/dashboard
+              required:
+                - email
+      responses:
+        "200":
+          description: Token has been sent to the client via cookie, if possible
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v2/databases/{database}/me:
+    get:
+      tags:
+        - users
+      summary: Identify the principal
+      description: Returns information about the principal associated with the session
+        provided
+      operationId: me
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    put:
+      tags:
+        - users
+      summary: Update the principal profile
+      description: Update the principal associated with the provided session
+      operationId: updateMe
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Jane Doe
+                familyName:
+                  type: string
+                  example: Doe
+                givenName:
+                  type: string
+                  example: Jane
+                picture:
+                  type: string
+                  format: uri
+                  example: https://example.com/avatar.jpg
+                emailVerified:
+                  type: boolean
+                  description: Whether the user's email is verified
+              required:
+                - name
+                - familyName
+                - givenName
+      responses:
+        "200":
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    delete:
+      tags:
+        - tenants
+      summary: delete the current user
+      description: sets the current user for delete.
+      operationId: deleteMe
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: user has been deleted
+          content: {}
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/signup:
+    post:
+      tags:
+        - users
+      summary: Signs up a new user
+      description: Creates a user in the database and then logs them in.
+      operationId: signup
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          description: A tenant id to add the user to when they are created
+          in: query
+          schema:
+            type: string
+        - name: newTenantName
+          description: A tenant name to create, then the user to when they are created
+          in: query
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+  /v2/databases/{database}/tenants/{tenantId}/invite:
+    post:
+      tags:
+        - tenants
+      summary: Invite a user to a tenant
+      description: Allows an authenticated tenant member to invite another user via
+        email. The invitee will receive an email and must accept the invitation.
+      operationId: inviteUserToTenant
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - identifier
+                - csrfToken
+                - redirectUrl
+                - callbackUrl
+              properties:
+                identifier:
+                  type: string
+                  format: email
+                  description: Email address of the user being invited
+                csrfToken:
+                  type: string
+                  description: CSRF token for request validation
+                redirectUrl:
+                  type: string
+                  format: uri
+                  description: URL to redirect the user to after accepting the invite
+                callbackUrl:
+                  type: string
+                  format: uri
+                  description: Callback URL to include in the invitation email
+      responses:
+        "200":
+          description: Invite sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Invite email sent
+        "400":
+          description: Bad request (validation failure, missing fields, or bad CSRF token)
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized (missing or invalid session)
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: Tenant not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+        - sessionCookie: []
+    put:
+      tags:
+        - tenants
+      summary: Accepts a tenant invite
+      description: Accepts an invite for a user to join a tenant using the token and
+        email. The invite must be valid and not expired.
+      operationId: acceptTenantInvite
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - identifier
+                - token
+                - callbackUrl
+              properties:
+                identifier:
+                  type: string
+                  format: email
+                token:
+                  type: string
+                callbackUrl:
+                  type: string
+                  format: uri
+      responses:
+        "201":
+          description: Successfully created the user and accepted the invite
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  email:
+                    type: string
+                  name:
+                    type: string
+                    nullable: true
+                  familyName:
+                    type: string
+                    nullable: true
+                  givenName:
+                    type: string
+                    nullable: true
+                  picture:
+                    type: string
+                    format: uri
+                    nullable: true
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  emailVerified:
+                    type: string
+                    format: date-time
+        "400":
+          description: Missing or invalid data (e.g., invalid token, malformed email, bad
+            callback URL)
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+        "403":
+          description: Inviter is no longer a member of the tenant
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: Invite not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "410":
+          description: Invite has expired
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/invites:
+    get:
+      tags:
+        - tenants
+      summary: List pending invites for a tenant
+      description: Returns all pending invites for a given tenant, accessible by
+        authenticated members of the tenant.
+      operationId: listTenantInvites
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of pending invites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    tenant_id:
+                      type: string
+                      format: uuid
+                    token:
+                      type: string
+                      description: Hashed invite token
+                    identifier:
+                      type: string
+                      format: email
+                    roles:
+                      type: array
+                      items:
+                        type: string
+                      nullable: true
+                    created_by:
+                      type: string
+                      format: uuid
+                      description: ID of the user who sent the invite
+                    expires:
+                      type: string
+                      format: date-time
+              example:
+                - id: bd371f92-03e1-4862-9f6b-6d96d392ff18
+                  tenant_id: 019731dc-2462-7615-8dc3-c9fd85e61966
+                  token: 0007afb8bf432f8729491e1af35f03d111eb9a8105c0e9c3eebd8ca31585aed3
+                  identifier: joseph@thenile.dev
+                  roles: null
+                  created_by: 019731dc-2440-7fd2-88b6-b233cc0e2695
+                  expires: 2025-06-02T22:16:40.535Z
+        "400":
+          description: Bad request (e.g. missing tenantId or SQL failure)
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+        "404":
+          description: No invites found
+          content:
+            text/plain:
+              schema:
+                type: string
+        "500":
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}:
+    put:
+      tags:
+        - tenants
+      summary: update a tenant
+      description: updates a tenant in the database
+      operationId: updateTenant
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Tenant values to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTenant"
+            examples:
+              Rename tenant:
+                summary: Renames the tenant
+                description: Tenant Request
+                value:
+                  name: New tenant name
+      responses:
+        "201":
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UpdateTenant"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    delete:
+      tags:
+        - tenants
+      summary: delete a tenant
+      description: sets a tenant for delete in the database
+      operationId: deleteTenant
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: update an existing tenant
+          content: {}
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    get:
+      tags:
+        - tenants
+      summary: get a tenant
+      description: get information about a tenant
+      operationId: getTenant
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: the tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/users/{userId}/link:
+    put:
+      tags:
+        - users
+      summary: links an existing user to a tenant
+      description: A user that already exists is added to a tenant
+      operationId: linkTenantUser
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantUser"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    delete:
+      tags:
+        - users
+      summary: Unlinks a user from a tenant
+      description: Marks a user to be deleted from the tenant. It does not remove the
+        user from other tenants or invalidate active sessions.
+      operationId: deleteTenantUser
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: The user was deleted
+          content: {}
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/users/{userId}:
+    put:
+      tags:
+        - users
+      summary: update a user
+      description: Updates a user, provided the authorized user is in the same tenant
+        as that user
+      operationId: updateTenantUser
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUser"
+      responses:
+        "200":
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantUser"
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/users:
+    get:
+      tags:
+        - users
+      summary: a list of tenant users
+      description: Returns a list of tenant users from the database
+      operationId: listTenantUsers
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "201":
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantUser"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+    post:
+      tags:
+        - users
+      summary: create a new user and assigns them to a tenant
+      description: Creates a brand new user on a tenant
+      operationId: createTenantUser
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: update an existing tenant wih a new user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TenantUser"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/tenants:
+    post:
+      tags:
+        - tenants
+      summary: creates a tenant
+      description: makes a tenant, assigns user to that tenant
+      operationId: createTenant
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateTenantRequest"
+            examples:
+              Create Tenant Request:
+                summary: Creates a named tenant
+                description: Create Tenant Request
+                value:
+                  name: My Sandbox
+      responses:
+        "201":
+          description: A created tenants
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+        "404":
+          description: Not found
+          content: {}
+      security:
+        - sessionCookie: []
+  /v2/databases/{database}/users/{userId}/tenants:
+    get:
+      tags:
+        - users
+      summary: lists tenants of user
+      description: lists the tenants associated with a user
+      operationId: listUserTenants
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
+          description: The id of of the user
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tenant"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+  /v2/databases/{database}/users:
+    post:
+      tags:
+        - users
+      summary: Creates a user
+      description: Adds a brand new user to the database
+      operationId: createUser
+      parameters:
+        - name: database
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: tenantId
+          description: A tenant id to add the user to when they are created
+          in: query
+          schema:
+            type: string
+        - name: newTenantName
+          description: A tenant name to create, then the user to when they are created
+          in: query
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUser"
+      responses:
+        "201":
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        "401":
+          description: Unauthorized
+          content: {}
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: nile-auth.session-token
+      description: Session token stored in a cookie after user signs in, prefixed with
+        __Secure if on https
+  parameters:
+    database:
+      name: database
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The string (id or name, depending on the credentials)
+    provider:
+      name: provider
+      in: path
+      required: true
+      schema:
+        type: string
+      description: the name of the provider (credentials, google, etc)
+  schemas:
+    PasswordTokenPayload:
+      type: object
+      required:
+        - callbackUrl
+        - email
+        - redirectUrl
+      properties:
+        callbackUrl:
+          type: string
+        email:
+          type: string
+        redirectUrl:
+          type: string
+    ResetPassword:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    CreateUser:
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    LinkUser:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+    UpdateUser:
+      type: object
+      properties:
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    CreateTenantRequest:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: The desired uuidv7 of the tenant
+    Tenant:
+      required:
+        - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    UpdateTenant:
+      type: object
+      properties:
+        name:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        emailVerified:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    TenantUser:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        created:
+          type: string
+          format: date-time
+        emailVerified:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    APIError:
+      type: string
+    MfaVerifyRequest:
+      type: object
+      required:
+        - token
+        - code
+      properties:
+        token:
+          type: string
+          description: Base64URL encoded MFA challenge token issued during login or setup.
+        code:
+          type: string
+          description: Time-bound one time passcode (email OTP or authenticator TOTP) that
+            proves possession of the second factor.
+    MfaVerifyResponse:
+      type: object
+      required:
+        - ok
+        - scope
+      properties:
+        ok:
+          type: boolean
+          description: Indicates that the MFA challenge was satisfied.
+        scope:
+          type: string
+          description: Identifies whether the challenge corresponded to a login flow or an
+            MFA setup flow.
+          enum:
+            - challenge
+            - setup
+    MfaSetupResponse:
+      type: object
+      required:
+        - ok
+        - method
+        - token
+        - expiresAt
+        - scope
+      properties:
+        ok:
+          type: boolean
+        method:
+          type: string
+          enum:
+            - authenticator
+            - email
+        token:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        scope:
+          type: string
+          enum:
+            - setup
+        otpauthUrl:
+          type: string
+          description: Present when the user is enrolling an authenticator app.
+        secret:
+          type: string
+          description: Base32 secret returned for authenticator enrollment.
+        maskedEmail:
+          type: string
+          description: Masked email address used for email OTP delivery.
+    MfaDisableRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Raw MFA challenge token issued during login or setup. Required when
+            verifying email MFA.
+        scope:
+          type: string
+          enum:
+            - challenge
+            - setup
+          description: Indicates the origin of the token.
+        method:
+          type: string
+          enum:
+            - authenticator
+            - email
+          description: Expected MFA method for the disable request.
+        code:
+          type: string
+          description: One-time passcode submitted to confirm MFA ownership.
+        requireCode:
+          type: boolean
+          description: Forces the server to verify `code` before disabling MFA.
+    MfaDisableResponse:
+      type: object
+      required:
+        - ok
+        - method
+      properties:
+        ok:
+          type: boolean
+          description: Indicates that MFA has been disabled for the user.
+        method:
+          type: string
+          enum:
+            - authenticator
+            - email
+          description: MFA method that was removed.
+tags: []

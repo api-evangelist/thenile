@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-mfa-disable-request-schema.json",
+  "title": "MfaDisableRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-auth-openapi.yml#/components/schemas/MfaDisableRequest",
+  "type": "object",
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "Raw MFA challenge token issued during login or setup. Required when verifying email MFA."
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "challenge",
+        "setup"
+      ],
+      "description": "Indicates the origin of the token."
+    },
+    "method": {
+      "type": "string",
+      "enum": [
+        "authenticator",
+        "email"
+      ],
+      "description": "Expected MFA method for the disable request."
+    },
+    "code": {
+      "type": "string",
+      "description": "One-time passcode submitted to confirm MFA ownership."
+    },
+    "requireCode": {
+      "type": "boolean",
+      "description": "Forces the server to verify `code` before disabling MFA."
+    }
+  }
+}

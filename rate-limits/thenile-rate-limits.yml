@@ -1,0 +1,6 @@
+generated: '2026-10-13'
+method: none
+name: Nile Rate Limits
+limits: []
+limit_count: 0
+note: No published API rate limits found in the docs index (https://thenile.dev/docs/llms.txt) or the three published OpenAPI documents; pricing lists connection counts per plan (see plans/), not request rates.

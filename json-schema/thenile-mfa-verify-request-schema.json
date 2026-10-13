@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-mfa-verify-request-schema.json",
+  "title": "MfaVerifyRequest",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-auth-openapi.yml#/components/schemas/MfaVerifyRequest",
+  "type": "object",
+  "required": [
+    "token",
+    "code"
+  ],
+  "properties": {
+    "token": {
+      "type": "string",
+      "description": "Base64URL encoded MFA challenge token issued during login or setup."
+    },
+    "code": {
+      "type": "string",
+      "description": "Time-bound one time passcode (email OTP or authenticator TOTP) that proves possession of the second factor."
+    }
+  }
+}

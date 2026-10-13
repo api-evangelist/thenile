@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-dedicated-compute-instance-schema.json",
+  "title": "DedicatedComputeInstance",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-global-openapi.yml#/components/schemas/DedicatedComputeInstance",
+  "required": [
+    "desiredInstanceType",
+    "instanceId",
+    "instanceName",
+    "instanceType",
+    "status"
+  ],
+  "type": "object",
+  "properties": {
+    "instanceId": {
+      "type": "string"
+    },
+    "workspace": {
+      "$ref": "#/$defs/Workspace"
+    },
+    "database": {
+      "$ref": "#/$defs/GetDatabaseResponse"
+    },
+    "region": {
+      "type": "string",
+      "enum": [
+        "AWS_US_WEST_2",
+        "AWS_US_EAST_1",
+        "AWS_EU_CENTRAL_1",
+        "AZURE_EASTUS"
+      ]
+    },
+    "instanceName": {
+      "type": "string"
+    },
+    "instanceType": {
+      "$ref": "#/$defs/ComputeInstanceType"
+    },
+    "desiredInstanceType": {
+      "$ref": "#/$defs/ComputeInstanceType"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PENDING",
+        "PROVISIONING",
+        "READY",
+        "RESIZING",
+        "DELETING",
+        "FAILED",
+        "TERMINATED"
+      ]
+    },
+    "created": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "deleted": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "ComputeInstanceType": {
+      "required": [
+        "computeSize",
+        "hourlyCost",
+        "id",
+        "memory"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "computeSize": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "memory": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "hourlyCost": {
+          "type": "number"
+        }
+      }
+    },
+    "DatabaseParentResponse": {
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        }
+      }
+    },
+    "GetDatabaseResponse": {
+      "required": [
+        "expandable",
+        "id",
+        "name",
+        "region",
+        "status",
+        "workspace"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "workspace": {
+          "$ref": "#/$defs/Workspace"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "PENDING",
+            "REQUESTED",
+            "BUILT",
+            "POOLED",
+            "READY"
+          ]
+        },
+        "region": {
+          "type": "string",
+          "enum": [
+            "AWS_US_WEST_2",
+            "AWS_US_EAST_1",
+            "AWS_EU_CENTRAL_1",
+            "AZURE_EASTUS"
+          ]
+        },
+        "expandable": {
+          "type": "boolean"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "apiHost": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Public database API URL; Since it is only used for tenants/users management, it is null for un-sharded databases.",
+          "format": "uri"
+        },
+        "dbHost": {
+          "type": "string",
+          "format": "uri"
+        },
+        "parent": {
+          "$ref": "#/$defs/DatabaseParentResponse"
+        }
+      }
+    },
+    "Workspace": {
+      "required": [
+        "name",
+        "slug"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "slug": {
+          "minLength": 1,
+          "type": "string"
+        },
+        "stripe_customer_id": {
+          "type": "string"
+        },
+        "created": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

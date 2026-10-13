@@ -1,0 +1,421 @@
+generated: '2026-10-13'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/thenile-auth-openapi.yml
+- openapi/thenile-database-openapi.yml
+- openapi/thenile-global-openapi.yml
+vocabulary:
+  name: Nile Domain Vocabulary
+  description: 'Terms declared by Nile''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions. Derived,
+    not authored.'
+  version: '2026-10-13'
+  terms:
+  - term: PasswordTokenPayload
+    definition: 'Object declared by the contract with fields: callbackUrl, email, redirectUrl.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/PasswordTokenPayload
+  - term: ResetPassword
+    definition: 'Object declared by the contract with fields: email, password.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/ResetPassword
+  - term: CreateUser
+    definition: 'Object declared by the contract with fields: email, password, name, givenName, familyName, picture.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/CreateUser
+  - term: LinkUser
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/LinkUser
+  - term: UpdateUser
+    definition: 'Object declared by the contract with fields: name, givenName, familyName, picture.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/UpdateUser
+  - term: CreateTenantRequest
+    definition: 'Object declared by the contract with fields: name, id.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/CreateTenantRequest
+  - term: Tenant
+    definition: 'Object declared by the contract with fields: id, name.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/Tenant
+  - term: UpdateTenant
+    definition: 'Object declared by the contract with fields: name.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/UpdateTenant
+  - term: User
+    definition: 'Object declared by the contract with fields: id, tenants, email, name, givenName, familyName, picture, emailVerified, created,
+      updated.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/User
+  - term: TenantUser
+    definition: 'Object declared by the contract with fields: id, email, name, givenName, familyName, picture, created, emailVerified, updated.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/TenantUser
+  - term: MfaVerifyRequest
+    definition: 'Object declared by the contract with fields: token, code.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/MfaVerifyRequest
+  - term: MfaVerifyResponse
+    definition: 'Object declared by the contract with fields: ok, scope.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/MfaVerifyResponse
+  - term: MfaSetupResponse
+    definition: 'Object declared by the contract with fields: ok, method, token, expiresAt, scope, otpauthUrl, secret, maskedEmail.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/MfaSetupResponse
+  - term: MfaDisableRequest
+    definition: 'Object declared by the contract with fields: token, scope, method, code, requireCode.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/MfaDisableRequest
+  - term: MfaDisableResponse
+    definition: 'Object declared by the contract with fields: ok, method.'
+    tags:
+    - Object
+    source: openapi/thenile-auth-openapi.yml#/components/schemas/MfaDisableResponse
+  - term: APIError
+    definition: 'Object declared by the contract with fields: errorCode, message, statusCode.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/APIError
+  - term: TenantSSORegistration
+    definition: 'Object declared by the contract with fields: id, tenantId, provider, configUrl, clientId, emailDomains, enabled.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/TenantSSORegistration
+  - term: OIDCFormPostView
+    definition: 'Object declared by the contract with fields: tenantId.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/OIDCFormPostView
+  - term: LoginUserResponse
+    definition: 'Object declared by the contract with fields: id, tenants, token.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/LoginUserResponse
+  - term: Token
+    definition: 'Object declared by the contract with fields: id, jwt, maxAge, type.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/Token
+  - term: CreateBasicUserRequest
+    definition: 'Object declared by the contract with fields: email, password, name, givenName, familyName, picture, newTenant.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/CreateBasicUserRequest
+  - term: LoginRequest
+    definition: 'Object declared by the contract with fields: email, password.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/LoginRequest
+  - term: UpdateUserRequest
+    definition: 'Object declared by the contract with fields: email, name, givenName, familyName, picture.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/UpdateUserRequest
+  - term: LogicalDatabase
+    definition: 'Object declared by the contract with fields: id, name, status, sharedPdb, placementStrategy.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/LogicalDatabase
+  - term: PhysicalDatabase
+    definition: 'Object declared by the contract with fields: id, regionId, pdbId.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/PhysicalDatabase
+  - term: GetDatabaseStatusResponse
+    definition: 'Object declared by the contract with fields: status.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/GetDatabaseStatusResponse
+  - term: PrincipalResponse
+    definition: 'Object declared by the contract with fields: id, principalType, email, name.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/PrincipalResponse
+  - term: ComputeClaimView
+    definition: 'Object declared by the contract with fields: id, regionId, pdbId, host, database, created, updated, deleted.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/ComputeClaimView
+  - term: InternalService
+    definition: 'Object declared by the contract with fields: id.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/InternalService
+  - term: DatabaseView
+    definition: 'Object declared by the contract with fields: id, name, status, workspaceId, workspaceSlug, sharedRegion, sharedPdb, created,
+      updated, deleted.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/DatabaseView
+  - term: OIDCProvider
+    definition: 'Object declared by the contract with fields: name, authType, redirectUrl, enabled, configUrl, config, ttl_sec.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/OIDCProvider
+  - term: OIDCRelyingParty
+    definition: 'Object declared by the contract with fields: id, tenantId, provider, clientId, clientSecret, emailDomains, enabled.'
+    tags:
+    - Object
+    source: openapi/thenile-database-openapi.yml#/components/schemas/OIDCRelyingParty
+  - term: ComputeInstanceType
+    definition: 'Object declared by the contract with fields: id, computeSize, memory, hourlyCost.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/ComputeInstanceType
+  - term: DatabaseParentResponse
+    definition: 'Object declared by the contract with fields: id, name.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseParentResponse
+  - term: DedicatedComputeInstance
+    definition: 'Object declared by the contract with fields: instanceId, workspace, database, region, instanceName, instanceType, desiredInstanceType,
+      status, created, updated, deleted.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DedicatedComputeInstance
+  - term: GetDatabaseResponse
+    definition: 'Object declared by the contract with fields: id, name, workspace, status, region, expandable, created, deleted, apiHost, dbHost,
+      parent.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/GetDatabaseResponse
+  - term: Workspace
+    definition: 'Object declared by the contract with fields: id, name, slug, stripe_customer_id, created.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/Workspace
+  - term: CreateComputeInstanceRequest
+    definition: 'Object declared by the contract with fields: instanceSize, instanceName.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CreateComputeInstanceRequest
+  - term: UpdateComputeInstanceRequest
+    definition: 'Object declared by the contract with fields: instanceSize, instanceName.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UpdateComputeInstanceRequest
+  - term: CreateCredentialResponse
+    definition: 'Object declared by the contract with fields: id, database, tenant, internal, password, created.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CreateCredentialResponse
+  - term: GetCredentialResponse
+    definition: 'Object declared by the contract with fields: id, database, tenant, internal, created.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/GetCredentialResponse
+  - term: RotateCredentialRequest
+    definition: 'Object declared by the contract with fields: delayOldSecretsExpirationHours, reason.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/RotateCredentialRequest
+  - term: ClaimDatabaseRequest
+    definition: 'Object declared by the contract with fields: claimDbSession.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/ClaimDatabaseRequest
+  - term: DatabaseErrorPoint
+    definition: 'Object declared by the contract with fields: timestamp, source, errorCount.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseErrorPoint
+  - term: DatabaseErrorsResponse
+    definition: 'Object declared by the contract with fields: granularity, points.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseErrorsResponse
+  - term: DatabaseQueryPerformancePoint
+    definition: 'Object declared by the contract with fields: timestamp, proxyQueriesPerSecond, thothQueriesPerSecond, thothP99LatencyMs, thothCpuMilliseconds.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseQueryPerformancePoint
+  - term: DatabaseQueryPerformanceResponse
+    definition: 'Object declared by the contract with fields: source, granularity, points.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseQueryPerformanceResponse
+  - term: CreateDatabaseRequest
+    definition: Parameters for creating a new database, including the name and region.
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CreateDatabaseRequest
+  - term: UpdateDatabaseRequest
+    definition: Parameters for renaming a database.
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UpdateDatabaseRequest
+  - term: DatabaseUptimePoint
+    definition: 'Object declared by the contract with fields: timestamp, uptimePercentage, uptimeSeconds, observedSeconds.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseUptimePoint
+  - term: DatabaseUptimeResponse
+    definition: 'Object declared by the contract with fields: source, scope, granularity, calculation, summary, points.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseUptimeResponse
+  - term: DatabaseUptimeSummary
+    definition: 'Object declared by the contract with fields: uptimePercentage, uptimeSeconds, observedSeconds.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseUptimeSummary
+  - term: UnauthenticatedProvisionDatabaseResponse
+    definition: 'Object declared by the contract with fields: databaseId, databaseName, workspaceSlug, region, sharded, apiHost, dbHost, credentialId,
+      password, env.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UnauthenticatedProvisionDatabaseResponse
+  - term: UnauthenticatedProvisionDatabaseRequest
+    definition: 'Object declared by the contract with fields: region.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UnauthenticatedProvisionDatabaseRequest
+  - term: Developer
+    definition: 'Object declared by the contract with fields: id, email, workspaces, databases, kind.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/Developer
+  - term: DeveloperInvite
+    definition: 'Object declared by the contract with fields: id, sender, email, workspace, verificationState, created, updated.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DeveloperInvite
+  - term: DeveloperInviteWithCode
+    definition: An invite for a developer to workspace with invite code
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DeveloperInviteWithCode
+  - term: CreateInviteRequest
+    definition: Parameters for creating an invitation for a developer to join a workspace.
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CreateInviteRequest
+  - term: DatabaseComputeUsage
+    definition: 'Object declared by the contract with fields: usageByInstance, totalVCPUHours, start, end.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/DatabaseComputeUsage
+  - term: InstancePeriodComputeUsage
+    definition: 'Object declared by the contract with fields: totalVCPUHours, size, start, end, spans.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/InstancePeriodComputeUsage
+  - term: TimeSeriesPoint
+    definition: 'Object declared by the contract with fields: x, y.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/TimeSeriesPoint
+  - term: UsageChartData
+    definition: 'Object declared by the contract with fields: points, maxCPUCount.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UsageChartData
+  - term: WorkspaceComputeUsage
+    definition: 'Object declared by the contract with fields: usageByDatabase, chartData, totalVCPUHours, start, end.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceComputeUsage
+  - term: CreateWorkspaceRequest
+    definition: Parameters for creating a new workspace.
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CreateWorkspaceRequest
+  - term: Point
+    definition: 'Object declared by the contract with fields: bucket, totalCents.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/Point
+  - term: StorageCoverage
+    definition: 'Object declared by the contract with fields: status, coveredSeconds, expectedSeconds, unmeasuredSeconds, lastSampleTime, longestGapSeconds,
+      policyVersion.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/StorageCoverage
+  - term: WorkspaceBillingHistoryDto
+    definition: 'Object declared by the contract with fields: ym, start, end, totals, points, partial, storage.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceBillingHistoryDto
+  - term: WorkspaceBillingCustomerDto
+    definition: 'Object declared by the contract with fields: workspace, stripeCustomerId, defaultPaymentMethod.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceBillingCustomerDto
+  - term: WorkspaceBillingReadinessDto
+    definition: 'Object declared by the contract with fields: workspace, workspaceId, stripeCustomerId, defaultPaymentMethodId, status, checkedAt,
+      lastError, source, detail.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceBillingReadinessDto
+  - term: WorkspaceSubscriptionDto
+    definition: 'Object declared by the contract with fields: workspace, level, validFrom, validTo, subscriptionId, defaultPaymentMethod.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceSubscriptionDto
+  - term: Allowance
+    definition: 'Object declared by the contract with fields: component, quantity, unit, scope.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/Allowance
+  - term: Rate
+    definition: 'Object declared by the contract with fields: component, quantity, unit, amountCents.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/Rate
+  - term: UsagePricing
+    definition: 'Object declared by the contract with fields: model, currency, usageThrough, effectiveFrom, estimated, partial, rates, monthlyAllowances,
+      storage.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/UsagePricing
+  - term: WorkspaceMonthlyTotalsDto
+    definition: 'Object declared by the contract with fields: ym, totals, pricing.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/WorkspaceMonthlyTotalsDto
+  - term: ComputeUsage
+    definition: 'Object declared by the contract with fields: totalVCPUHours, points, maxCPUCount, instanceCount.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/ComputeUsage
+  - term: CpuPoint
+    definition: 'Object declared by the contract with fields: bucket, milliseconds.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CpuPoint
+  - term: CpuUsage
+    definition: 'Object declared by the contract with fields: totalMilliseconds, points, databaseCount, reportingDatabaseCount.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/CpuUsage
+  - term: MetricComputeUsage
+    definition: 'Object declared by the contract with fields: status, data, unavailableDatabaseIds, message.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/MetricComputeUsage
+  - term: MetricCpuUsage
+    definition: 'Object declared by the contract with fields: status, data, unavailableDatabaseIds, message.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/MetricCpuUsage
+  - term: MetricStorageHistory
+    definition: 'Object declared by the contract with fields: status, data, unavailableDatabaseIds, message.'
+    tags:
+    - Object
+    source: openapi/thenile-global-openapi.yml#/components/schemas/MetricStorageHistory

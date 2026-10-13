@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/api-evangelist/thenile/main/json-schema/thenile-create-database-request-schema.json",
+  "title": "CreateDatabaseRequest",
+  "description": "Parameters for creating a new database, including the name and region.",
+  "x-generated": "2026-10-13",
+  "x-method": "derived",
+  "x-generator": "derive-json-schema.py",
+  "x-source": "openapi/thenile-global-openapi.yml#/components/schemas/CreateDatabaseRequest",
+  "required": [
+    "databaseName",
+    "region"
+  ],
+  "type": "object",
+  "properties": {
+    "databaseName": {
+      "minLength": 1,
+      "type": "string",
+      "description": "The name of the database to be created. Database names must be less than 64\ncharacters, and unique within a workspace. Names may contain letters (lower\nor uppercase), numbers, and underscores, and must begin with a letter or\nunderscore.\n"
+    },
+    "region": {
+      "type": "string",
+      "description": "The region where the database will be hosted. Availability depends on the\nworkspace flavor and deployment configuration. Use the workspace regions\nendpoint to discover available values:\n- `AWS_US_WEST_2` - AWS in US West (Oregon)\n- `AWS_US_EAST_1` - AWS in US East (Northern Virginia)\n- `AWS_EU_CENTRAL_1` - AWS in Europe (Frankfurt)\n",
+      "enum": [
+        "AWS_US_WEST_2",
+        "AWS_US_EAST_1",
+        "AWS_EU_CENTRAL_1"
+      ]
+    }
+  }
+}
