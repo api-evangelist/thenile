@@ -1,0 +1,1512 @@
+openapi: 3.2.0
+info:
+  title: Thenile Workspaces API
+  contact:
+    email: support@thenile.dev
+  version: '1.0'
+  description: 'Operations tagged Workspaces across 4 of this provider''s published API definitions: api-openapi.json, global-openapi.json, thenile-database-openapi.yml, thenile-global-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+tags:
+- name: Workspaces
+paths:
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants:
+    get:
+      summary: List tenants
+      description: Lists all tenants in a database. If a developer token is provided, all tenants are listed. If a user token is provided, only tenants that the user is a member of are listed.
+      operationId: globalListTenants
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+      tags:
+      - Workspaces
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/invites:
+    get:
+      tags:
+      - Workspaces
+      summary: List developer invites
+      description: Lists all developer invites in a workspace
+      operationId: listDeveloperInvites
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: verificationState
+        in: query
+        description: Comma-separated email verification states
+        explode: false
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - EMAIL_PENDING
+            - EMAIL_SENT
+            - VERIFIED
+            - EXPIRED
+      responses:
+        '200':
+          description: List of invites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeveloperInvite'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Workspaces
+      summary: Invite a developer to a workspace
+      description: 'Sends an email to another developer with a link that allows them to join the
+
+        workspace.'
+      operationId: createDeveloperInvite
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: redirect_host
+        in: query
+        schema:
+          type: string
+      requestBody:
+        description: Contact information for the invitee
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateInviteRequest'
+        required: true
+      responses:
+        '201':
+          description: Invite created successfully. An email will be sent.
+          content:
+            application/json:
+              schema:
+                anyOf:
+                - $ref: '#/components/schemas/DeveloperInvite'
+                - $ref: '#/components/schemas/DeveloperInviteWithCode'
+        '202':
+          description: The invite is pending email delivery.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/invites/{inviteId}:
+    delete:
+      tags:
+      - Workspaces
+      summary: Deletes a previously issued invite
+      operationId: deleteDeveloperInvite
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: inviteId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Invite deleted
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Invite not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/invites/{inviteId}/resend:
+    post:
+      tags:
+      - Workspaces
+      summary: Resend an existing workspace invitation
+      description: Resends the same invitation code without replacing or revoking it. Delivery failure keeps the prior invitation unchanged.
+      operationId: resendDeveloperInvite
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: inviteId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Invitation email accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeveloperInvite'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Invitation absent or revoked in this workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '409':
+          description: Invitation accepted, expired or being processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '502':
+          description: Email delivery could not be confirmed; prior invitation kept
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/metrics/compute:
+    get:
+      tags:
+      - Workspaces
+      summary: List workspace compute metrics
+      description: List dedicated compute metrics for a workspace.
+      operationId: listWorkspaceComputeMetrics
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: The start of a time window
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: The end of a time window
+          format: date-time
+      responses:
+        '200':
+          description: Compute metrics for the databases in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceComputeUsage'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces:
+    get:
+      tags:
+      - Workspaces
+      summary: List workspaces
+      description: Lists all workspaces that an authenticated developer is authorized to use.
+      operationId: listWorkspaces
+      responses:
+        '200':
+          description: List of workspaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Workspaces
+      summary: Create a workspace
+      description: 'Creates a workspace for the authenticated developer. A workspace slug is
+
+        generated from the workspace name and used as the workspace identifier.
+
+        Workspace slugs must be globally unique.
+
+        Generated slugs will only include ASCII characters. Spaces and non-ASCII
+
+        characters are replaced with hyphens.'
+      operationId: createWorkspace
+      requestBody:
+        description: The name of the new workspace
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+        required: true
+      responses:
+        '201':
+          description: Created workspace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '409':
+          description: Workspace with the same name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}:
+    get:
+      tags:
+      - Workspaces
+      summary: Get a workspace
+      description: Get details about a specific workspace.
+      operationId: getWorkspace
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Details about the named workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/compute-types:
+    get:
+      tags:
+      - Workspaces
+      summary: List available compute types
+      description: List dedicated compute types available for a workspace.
+      operationId: listComputeTypes
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of all available instance types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeInstanceType'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '500':
+          description: Compute types failed to load
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/developers:
+    get:
+      tags:
+      - Workspaces
+      summary: List developers with access to a workspace
+      description: List details about the developers authorized to access the workspace.
+      operationId: listWorkspaceDevelopers
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of Developer objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Developer'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/developers/{developerId}:
+    delete:
+      tags:
+      - Workspaces
+      summary: Remove a developer from a workspace
+      description: Removes a developer from the workspace.
+      operationId: removeDeveloper
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: developerId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: Developer removed
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace or developer not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/billing/{ym}/history:
+    get:
+      tags:
+      - Workspaces
+      summary: Get cumulative daily workspace costs
+      description: Rates each UTC day boundary from month start, plus the current time for the current month. Totals match the final point. Monthly tiers and subscription proration are preserved.
+      operationId: getWorkspaceBillingHistory
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ym
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Cumulative costs and component totals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceBillingHistoryDto'
+        '400':
+          description: Invalid or future month
+        '401':
+          description: Developer is not a workspace member
+        '404':
+          description: Workspace not found
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/billing/customer:
+    put:
+      tags:
+      - Workspaces
+      summary: Ensure workspace billing customer
+      description: 'Find or create the Stripe customer linked to this workspace and return
+
+        customer-level payment metadata.'
+      operationId: ensureWorkspaceBillingCustomer
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Workspace billing customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceBillingCustomerDto'
+        '403':
+          description: API-key callers cannot ensure billing customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '502':
+          description: Customer lookup failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/billing/readiness:
+    get:
+      tags:
+      - Workspaces
+      summary: Get workspace billing readiness
+      description: 'Resolve the workspace billing customer without creating one and return
+
+        local readiness semantics for customer and default payment-method state.'
+      operationId: getWorkspaceBillingReadiness
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Workspace billing readiness
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceBillingReadinessDto'
+        '403':
+          description: API-key callers cannot read billing readiness
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/subscription:
+    get:
+      tags:
+      - Workspaces
+      summary: Get current subscription (from DB)
+      description: Get details of the current subscription for the given workspace.
+      operationId: getWorkspaceCurrentSubscription
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A subscription record
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceSubscriptionDto'
+        '404':
+          description: No active subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/subscription/history:
+    get:
+      tags:
+      - Workspaces
+      summary: List subscription history (most-recent first)
+      description: List all subscription records for the given workspace, most-recent first.
+      operationId: getWorkspaceSubscriptionHistory
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Subscription history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WorkspaceSubscriptionDto'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/billing/{ym}/totals:
+    get:
+      tags:
+      - Workspaces
+      summary: Monthly totals by component, from rated lines
+      operationId: totals
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: ym
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Monthly component totals
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceMonthlyTotalsDto'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/insights/usage:
+    get:
+      tags:
+      - Workspaces
+      summary: Get observed workspace usage
+      description: Returns month-to-date CPU and provisioned compute usage in UTC, and current storage with daily UTC snapshots. Each metric has an independent availability status. CPU includes retained identities of databases deleted this month. Each storage snapshot includes the databases present at its boundary. Flavor 1 only.
+      operationId: getWorkspaceUsageInsights
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: include_compute
+        in: query
+        schema:
+          type: boolean
+          default: true
+      responses:
+        '200':
+          description: Workspace usage and per-metric availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspaceUsageResponse'
+        '401':
+          description: Developer is not a member of this workspace
+        '403':
+          description: Workspace uses legacy usage metrics
+        '404':
+          description: Workspace not found
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+components:
+  schemas:
+    Tenant:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - pdb_creation_failure
+          - get_pdbs_failure
+          - get_ldbs_placed_on_pdb_failure
+          - credential_deletion_failure
+          - get_ldb_on_pdb_placement_status_failure
+          - pdb_deletion_failure
+          - missing_flavor_id
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    WorkspaceUsageResponse:
+      type: object
+      properties:
+        version:
+          type: integer
+          format: int32
+        workspaceSlug:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        asOf:
+          type: string
+          format: date-time
+        cpu:
+          $ref: '#/components/schemas/MetricCpuUsage'
+        storage:
+          $ref: '#/components/schemas/MetricStorageUsage'
+        compute:
+          $ref: '#/components/schemas/MetricComputeUsage'
+        storageHistory:
+          $ref: '#/components/schemas/MetricStorageHistory'
+    UsageChartData:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+        maxCPUCount:
+          type: number
+          format: double
+    StorageCoverage:
+      type: object
+      properties:
+        status:
+          type: string
+        coveredSeconds:
+          type: integer
+          format: int64
+        expectedSeconds:
+          type: integer
+          format: int64
+        unmeasuredSeconds:
+          type: integer
+          format: int64
+        lastSampleTime:
+          type: string
+          format: date-time
+        longestGapSeconds:
+          type: integer
+          format: int64
+        policyVersion:
+          type: integer
+          format: int32
+    MetricStorageUsage:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/StorageUsage'
+        unavailableDatabaseIds:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+    WorkspaceSubscriptionDto:
+      type: object
+      properties:
+        workspace:
+          type: string
+        level:
+          type: string
+        validFrom:
+          type: string
+          format: date-time
+        validTo:
+          type: string
+          format: date-time
+        subscriptionId:
+          type: string
+        defaultPaymentMethod:
+          type: string
+    APIError_2:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - forbidden_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_rename_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_deletion_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - unauthorized_client
+          - unsupported_response_type
+          - invalid_request
+          - server_error
+          - access_denied
+          - feature_ineligible
+          - customer_lookup_failure
+          - threshold_exceeded
+          - create_rejected
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    StorageHistory:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/StoragePoint'
+    Point:
+      type: object
+      properties:
+        bucket:
+          type: string
+          format: date-time
+        totalCents:
+          type: number
+    MetricComputeUsage:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/ComputeUsage'
+        unavailableDatabaseIds:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+    Developer:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        workspaces:
+          uniqueItems: true
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+        databases:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        kind:
+          type: string
+          enum:
+          - HUMAN
+          - API
+    UsagePricing:
+      type: object
+      properties:
+        model:
+          type: string
+        currency:
+          type: string
+        usageThrough:
+          type: string
+          format: date-time
+        effectiveFrom:
+          type: string
+          format: date-time
+        estimated:
+          type: boolean
+        partial:
+          type: boolean
+        rates:
+          type: array
+          items:
+            $ref: '#/components/schemas/Rate'
+        monthlyAllowances:
+          type: array
+          items:
+            $ref: '#/components/schemas/Allowance'
+        storage:
+          $ref: '#/components/schemas/StorageCoverage'
+    Allowance:
+      type: object
+      properties:
+        component:
+          type: string
+        quantity:
+          type: number
+        unit:
+          type: string
+        scope:
+          type: string
+    StoragePoint:
+      type: object
+      properties:
+        bucket:
+          type: string
+          format: date-time
+        totalBytes:
+          type: integer
+          format: int64
+    TimeSeriesPoint:
+      type: object
+      properties:
+        x:
+          type: integer
+          format: int64
+        y:
+          type: number
+          format: double
+    WorkspaceMonthlyTotalsDto:
+      type: object
+      properties:
+        ym:
+          type: string
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+        pricing:
+          $ref: '#/components/schemas/UsagePricing'
+    CreateInviteRequest:
+      required:
+      - email
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          description: The invitee's email address
+          format: email
+        programmatic:
+          type: boolean
+          description: If true, the response will include the invite code.
+      description: 'Parameters for creating an invitation for a developer to join a workspace.
+
+        '
+    InstancePeriodComputeUsage:
+      type: object
+      properties:
+        totalVCPUHours:
+          type: number
+          format: double
+        size:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        spans:
+          type: array
+          items:
+            $ref: '#/components/schemas/InstancePeriodComputeUsage'
+    CreateWorkspaceRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: The name of the new workspace.
+      description: Parameters for creating a new workspace.
+    DeveloperInviteWithCode:
+      type: object
+      properties:
+        id:
+          type: string
+        sender:
+          $ref: '#/components/schemas/Developer'
+        email:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        verificationState:
+          type: string
+          enum:
+          - EMAIL_PENDING
+          - EMAIL_SENT
+          - VERIFIED
+          - EXPIRED
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        code:
+          type: string
+      description: An invite for a developer to workspace with invite code
+    CpuUsage:
+      type: object
+      properties:
+        totalMilliseconds:
+          type: number
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/CpuPoint'
+        databaseCount:
+          type: integer
+          format: int32
+        reportingDatabaseCount:
+          type: integer
+          format: int32
+    CpuPoint:
+      type: object
+      properties:
+        bucket:
+          type: string
+          format: date-time
+        milliseconds:
+          type: number
+    WorkspaceComputeUsage:
+      type: object
+      properties:
+        usageByDatabase:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/DatabaseComputeUsage'
+        chartData:
+          $ref: '#/components/schemas/UsageChartData'
+        totalVCPUHours:
+          type: number
+          format: double
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    MetricCpuUsage:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/CpuUsage'
+        unavailableDatabaseIds:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+    Workspace:
+      required:
+      - name
+      - slug
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+        slug:
+          minLength: 1
+          type: string
+        stripe_customer_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+    ComputeUsage:
+      type: object
+      properties:
+        totalVCPUHours:
+          type: number
+          format: double
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimeSeriesPoint'
+        maxCPUCount:
+          type: number
+          format: double
+        instanceCount:
+          type: integer
+          format: int32
+    DeveloperInvite:
+      required:
+      - email
+      - id
+      - sender
+      - verificationState
+      - workspace
+      type: object
+      properties:
+        id:
+          type: string
+        sender:
+          $ref: '#/components/schemas/Developer'
+        email:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        verificationState:
+          type: string
+          enum:
+          - EMAIL_PENDING
+          - EMAIL_SENT
+          - VERIFIED
+          - EXPIRED
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    ComputeInstanceType:
+      required:
+      - computeSize
+      - hourlyCost
+      - id
+      - memory
+      type: object
+      properties:
+        id:
+          type: string
+        computeSize:
+          minLength: 1
+          type: string
+        memory:
+          minLength: 1
+          type: string
+        hourlyCost:
+          type: number
+    DatabaseComputeUsage:
+      type: object
+      properties:
+        usageByInstance:
+          type: object
+          additionalProperties:
+            $ref: '#/components/schemas/InstancePeriodComputeUsage'
+        totalVCPUHours:
+          type: number
+          format: double
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+    WorkspaceBillingHistoryDto:
+      type: object
+      properties:
+        ym:
+          type: string
+        start:
+          type: string
+          format: date-time
+        end:
+          type: string
+          format: date-time
+        totals:
+          type: object
+          additionalProperties:
+            type: number
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+        partial:
+          type: boolean
+        storage:
+          $ref: '#/components/schemas/StorageCoverage'
+    WorkspaceBillingReadinessDto:
+      type: object
+      properties:
+        workspace:
+          type: string
+        workspaceId:
+          type: string
+        stripeCustomerId:
+          type: string
+        defaultPaymentMethodId:
+          type: string
+        status:
+          type: string
+          enum:
+          - ready
+          - missing_customer
+          - missing_payment_method
+          - lookup_failed
+          - manual_review_required
+        checkedAt:
+          type: string
+          format: date-time
+        lastError:
+          type: string
+        source:
+          type: string
+        detail:
+          type: string
+    WorkspaceBillingCustomerDto:
+      type: object
+      properties:
+        workspace:
+          type: string
+        stripeCustomerId:
+          type: string
+        defaultPaymentMethod:
+          type: string
+    Rate:
+      type: object
+      properties:
+        component:
+          type: string
+        quantity:
+          type: integer
+          format: int64
+        unit:
+          type: string
+        amountCents:
+          type: number
+    StorageUsage:
+      type: object
+      properties:
+        activeBytes:
+          type: integer
+          format: int64
+        derivedBytes:
+          type: integer
+          format: int64
+        historyBytes:
+          type: integer
+          format: int64
+        logicalBytes:
+          type: integer
+          format: int64
+        billableBytes:
+          type: integer
+          format: int64
+        totalBytes:
+          type: integer
+          format: int64
+        oldestCollectedAt:
+          type: string
+          format: date-time
+        newestCollectedAt:
+          type: string
+          format: date-time
+        databaseCount:
+          type: integer
+          format: int32
+        reportingDatabaseCount:
+          type: integer
+          format: int32
+    MetricStorageHistory:
+      type: object
+      properties:
+        status:
+          type: string
+        data:
+          $ref: '#/components/schemas/StorageHistory'
+        unavailableDatabaseIds:
+          type: array
+          items:
+            type: string
+        message:
+          type: string
+    APIError_3:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - forbidden_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_rename_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_deletion_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - unauthorized_client
+          - unsupported_response_type
+          - invalid_request
+          - server_error
+          - access_denied
+          - feature_ineligible
+          - customer_lookup_failure
+          - threshold_exceeded
+          - create_rejected
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- api-openapi.json
+- global-openapi.json
+- thenile-database-openapi.yml
+- thenile-global-openapi.yml

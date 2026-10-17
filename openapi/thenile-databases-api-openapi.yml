@@ -1,0 +1,1932 @@
+openapi: 3.2.0
+info:
+  title: Thenile Databases API
+  contact:
+    email: support@thenile.dev
+  version: '1.0'
+  description: 'Operations tagged Databases across 4 of this provider''s published API definitions: api-openapi.json, global-openapi.json, thenile-database-openapi.yml, thenile-global-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+tags:
+- name: Databases
+paths:
+  /databases/{databaseId}/tenants:
+    get:
+      summary: List tenants
+      description: Lists all tenants in a database. If a developer token is provided, all tenants are listed. If a user token is provided, only tenants that the user is a member of are listed.
+      operationId: listTenants
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of tenants
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+      tags:
+      - Databases
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}:
+    get:
+      tags:
+      - Databases
+      summary: (Internal) Get a logical database
+      description: Gets details of a logical database from the data plane.
+      operationId: internalGetLogicalDatabase
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Database details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogicalDatabase'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    delete:
+      tags:
+      - Databases
+      summary: (Internal) Delete a logical database
+      description: Marks a logical database as deleted and hard deletes all credentials.
+      operationId: internalDeleteLogicalDatabase
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Database deleted
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/status:
+    get:
+      tags:
+      - Databases
+      summary: (Internal) Get database creation status
+      description: Get the creation status of a specific database
+      operationId: internalGetDatabaseStatus
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: The current status of the database
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDatabaseStatusResponse'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/me:
+    get:
+      tags:
+      - Databases
+      summary: Identify the principal
+      description: Returns information about the principal associated with the token provided
+      operationId: identifyPrincipal
+      responses:
+        '200':
+          description: Principal identified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrincipalResponse'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Principal not identified
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/compute:
+    get:
+      tags:
+      - Databases
+      summary: List dedicated compute instances for a database
+      operationId: listComputeForDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: The start of a time window to search for active instances
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: The end of a time window to search for active instances
+          format: date-time
+      responses:
+        '200':
+          description: Instance list retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Databases
+      summary: Create a dedicated compute instance
+      operationId: createComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateComputeInstanceRequest'
+        required: true
+      responses:
+        '200':
+          description: Instance created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DedicatedComputeInstance'
+        '202':
+          description: Instance creation pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/compute/{instanceId}:
+    get:
+      tags:
+      - Databases
+      summary: Describe a dedicated compute instance
+      operationId: describeComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Dedicated compute instance details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Databases
+      summary: Update a dedicated compute instance
+      description: Rename and/or resize a dedicated compute instance.
+      operationId: updateComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateComputeInstanceRequest'
+        required: true
+      responses:
+        '200':
+          description: Instance updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '202':
+          description: Instance update pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Databases
+      summary: Delete a dedicated compute instance
+      description: 'Removes a compute instance from your database and queues it for deletion. The
+
+        instance will no longer appear in your Nile dashboard. When deletion is
+
+        finalized, all data associated with the instance will be deleted.'
+      operationId: deleteComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Instance deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '202':
+          description: Instance deletion pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/credentials:
+    get:
+      tags:
+      - Databases
+      summary: Lists credentials for a database
+      description: 'Lists all credentials that exist for a database. The id of the credential is
+
+        included in the response, but not the password. Passwords are provided only once,
+
+        at the time the credential is created, and are encrypted for storage.'
+      operationId: listCredentials
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: query
+        schema:
+          type: string
+      - name: internal
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: A list of Credential objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetCredentialResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Databases
+      summary: Create a database credential
+      description: 'Generates a new secure credential for a database. The generated password is
+
+        returned in the response, and is the only time the password is available in
+
+        plaintext. No request body is required."'
+      operationId: createCredential
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: query
+        schema:
+          type: string
+      - name: internal
+        in: query
+        schema:
+          type: boolean
+          default: false
+      responses:
+        '200':
+          description: Credential created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCredentialResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/credentials/{credentialId}:
+    delete:
+      tags:
+      - Databases
+      summary: Delete a database credential
+      description: Deletes an existing database credential. No request body is required."
+      operationId: deleteCredential
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: credentialId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Credential deleted
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/credentials/rotate:
+    post:
+      tags:
+      - Databases
+      summary: Rotate a database credential
+      description: Generates a new credential and schedules existing credentials for deletion after the provided delay.
+      operationId: rotateCredential
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: query
+        schema:
+          type: string
+      - name: internal
+        in: query
+        schema:
+          type: boolean
+          default: false
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/RotateCredentialRequest'
+      responses:
+        '200':
+          description: New credential after rotation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateCredentialResponse'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/claim:
+    post:
+      tags:
+      - Databases
+      summary: Claim a database provisioned without auth
+      description: Moves the database into the selected workspace if the claim database session is valid.
+      operationId: claimDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimDatabaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Database claimed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '400':
+          description: The database is not compatible with the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Claim database session is invalid or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseId}/insights/errors:
+    get:
+      tags:
+      - Databases
+      summary: List database error metrics
+      description: Lists bucketed SQL and connection error counts reported by Thoth and Nile Proxy.
+      operationId: listDatabaseErrorInsights
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned start of the metric window.
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned end of the metric window.
+          format: date-time
+      - name: granularity
+        in: query
+        schema:
+          type: string
+          description: 'Bucket granularity: 1m, 5m, 1h, or 1d.'
+      responses:
+        '200':
+          description: Database error metrics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseErrorsResponse'
+        '400':
+          description: Invalid time range or granularity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Database not found in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '502':
+          description: Regional metadata or Tinybird telemetry is unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '503':
+          description: Tinybird telemetry is not configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseId}/insights/query-performance:
+    get:
+      tags:
+      - Databases
+      summary: List database query performance metrics
+      description: Lists separately sourced Proxy query rate, Thoth observed query rate, and Thoth P99 query latency for a database.
+      operationId: listDatabaseQueryPerformanceInsights
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned start of the metric window.
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned end of the metric window.
+          format: date-time
+      - name: granularity
+        in: query
+        schema:
+          type: string
+          description: 'Bucket granularity: 1m, 5m, 1h, or 1d.'
+      responses:
+        '200':
+          description: Database query performance metrics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseQueryPerformanceResponse'
+        '400':
+          description: Invalid time range or granularity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Database not found in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '502':
+          description: Regional metadata or Tinybird telemetry is unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '503':
+          description: Tinybird telemetry is not configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases:
+    get:
+      tags:
+      - Databases
+      summary: List databases
+      description: Lists all of the databases in a workspace.
+      operationId: listDatabases
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A list of GetDatabaseResponse objects.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Workspace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Databases
+      summary: Create a database
+      description: 'Creates a database record in the control plane and triggers creation in the
+
+        target region. Database names must be less than 64 characters, and unique
+
+        within a workspace. Names may contain letters (lower or uppercase), numbers,
+
+        and underscores, and must begin with a letter or underscore.'
+      operationId: createDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The name and region for the new database
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateDatabaseRequest'
+        required: true
+      responses:
+        '201':
+          description: Database created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '400':
+          description: An invalid database name or region was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: The workspace does not exist or is not authorized for the authenticated user.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '409':
+          description: A database with the provided name already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}:
+    get:
+      tags:
+      - Databases
+      summary: Get a database
+      description: Gets details of a database.
+      operationId: getDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Database details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: No database with that name exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Databases
+      summary: Rename a database
+      description: Renames a database in a workspace.
+      operationId: renameDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The new name for the database.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateDatabaseRequest'
+        required: true
+      responses:
+        '200':
+          description: Database renamed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '400':
+          description: An invalid database name was provided.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '409':
+          description: A database with the provided name already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Databases
+      summary: Delete a database
+      description: 'Marks a database as deleted and queues its data for deletion. The database will
+
+        no longer appear in your Nile dashboard. You will be able to connect to it and
+
+        operate on it while it is queued for deletion, but compute costs still apply.'
+      operationId: deleteDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Database deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Database not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseId}/insights/uptime:
+    get:
+      tags:
+      - Databases
+      summary: List database uptime metrics
+      description: Lists time-weighted database uptime derived from PostgreSQL ready-probe samples.
+      operationId: listDatabaseUptimeInsights
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned start of the metric window.
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: Minute-aligned end of the metric window.
+          format: date-time
+      - name: granularity
+        in: query
+        schema:
+          type: string
+          description: 'Bucket granularity: 1m, 5m, 1h, or 1d.'
+      responses:
+        '200':
+          description: Database uptime metrics.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseUptimeResponse'
+        '400':
+          description: Invalid time range or granularity.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '404':
+          description: Database not found in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '502':
+          description: Regional metadata or Tinybird telemetry is unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+        '503':
+          description: Tinybird telemetry is not configured.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError_2'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/provision:
+    post:
+      tags:
+      - Databases
+      summary: Provision a database without authentication
+      description: Creates a database and returns connection details plus a 24h claim-session JWT in the Nile-Claim-Db-Session response header.
+      operationId: provisionDatabaseUnauthenticated
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UnauthenticatedProvisionDatabaseRequest'
+        required: true
+      responses:
+        '201':
+          description: Provisioned database and connection details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UnauthenticatedProvisionDatabaseResponse'
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/regions:
+    get:
+      tags:
+      - Databases
+      summary: List available regions
+      description: 'Retrieve the list of available region identifiers for a workspace.
+
+        Identifiers are composed of a prefix indicating the underlying cloud provider
+
+        followed by a region name in that provider. For example `AWS_US_WEST_2` is
+
+        associated with the `us-west-2` region (Portland, OR) of AWS.'
+      operationId: listRegions
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Available regions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - AWS_US_WEST_2
+                  - AWS_US_EAST_1
+                  - AWS_EU_CENTRAL_1
+                  - AZURE_EASTUS
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /regions:
+    get:
+      tags:
+      - Databases
+      summary: List regions for unauthenticated database provisioning
+      description: 'Retrieve region identifiers supporting non-sharded (Flavor-1) databases
+
+        for use with POST /databases/provision. Authentication is not required.'
+      operationId: listProvisioningRegions
+      responses:
+        '200':
+          description: Available Flavor-1 regions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+                  enum:
+                  - AWS_US_WEST_2
+                  - AWS_US_EAST_1
+                  - AWS_EU_CENTRAL_1
+                  - AZURE_EASTUS
+    servers:
+    - url: https://global.thenile.dev
+components:
+  schemas:
+    Tenant:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - pdb_creation_failure
+          - get_pdbs_failure
+          - get_ldbs_placed_on_pdb_failure
+          - credential_deletion_failure
+          - get_ldb_on_pdb_placement_status_failure
+          - pdb_deletion_failure
+          - missing_flavor_id
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    PrincipalResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        principalType:
+          type: string
+          enum:
+          - DEVELOPER
+          - USER
+          - INTERNAL
+        email:
+          type: string
+        name:
+          type: string
+    LogicalDatabase:
+      required:
+      - id
+      - placementStrategy
+      - sharedPdb
+      - status
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+        sharedPdb:
+          $ref: '#/components/schemas/PhysicalDatabase'
+        placementStrategy:
+          type: string
+          enum:
+          - RANDOM
+          - SINGLE
+    GetDatabaseStatusResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+    PhysicalDatabase:
+      required:
+      - id
+      - pdbId
+      - regionId
+      type: object
+      properties:
+        id:
+          type: string
+        regionId:
+          type: integer
+          format: int32
+        pdbId:
+          type: integer
+          format: int32
+    UpdateDatabaseRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+          description: 'The new name of the database. Database names must be less than 64
+
+            characters, and unique within a workspace. Names may contain letters
+
+            (lower or uppercase), numbers, and underscores, and must begin with a
+
+            letter or underscore.
+
+            '
+          example: my_spectacular_db
+      description: Parameters for renaming a database.
+    DatabaseParentResponse:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+    DatabaseQueryPerformancePoint:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        proxyQueriesPerSecond:
+          type: number
+        thothQueriesPerSecond:
+          type: number
+        thothP99LatencyMs:
+          type: number
+        thothCpuMilliseconds:
+          type: number
+    UpdateComputeInstanceRequest:
+      type: object
+      properties:
+        instanceSize:
+          type: string
+        instanceName:
+          maxLength: 512
+          minLength: 1
+          type: string
+    CreateComputeInstanceRequest:
+      required:
+      - instanceName
+      - instanceSize
+      type: object
+      properties:
+        instanceSize:
+          minLength: 1
+          type: string
+        instanceName:
+          maxLength: 512
+          minLength: 1
+          type: string
+    APIError_2:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - forbidden_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_rename_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_deletion_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - unauthorized_client
+          - unsupported_response_type
+          - invalid_request
+          - server_error
+          - access_denied
+          - feature_ineligible
+          - customer_lookup_failure
+          - threshold_exceeded
+          - create_rejected
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    DatabaseUptimePoint:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        uptimePercentage:
+          type: number
+        uptimeSeconds:
+          type: integer
+          format: int64
+        observedSeconds:
+          type: integer
+          format: int64
+    DatabaseUptimeSummary:
+      type: object
+      properties:
+        uptimePercentage:
+          type: number
+        uptimeSeconds:
+          type: integer
+          format: int64
+        observedSeconds:
+          type: integer
+          format: int64
+    CreateCredentialResponse:
+      required:
+      - database
+      - id
+      - password
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        database:
+          $ref: '#/components/schemas/GetDatabaseResponse'
+        tenant:
+          type: string
+        internal:
+          type: boolean
+        password:
+          minLength: 1
+          type: string
+        created:
+          type: string
+          format: date-time
+    DatabaseErrorPoint:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        source:
+          type: string
+        errorCount:
+          type: integer
+          format: int64
+    DedicatedComputeInstance:
+      required:
+      - desiredInstanceType
+      - instanceId
+      - instanceName
+      - instanceType
+      - status
+      type: object
+      properties:
+        instanceId:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        database:
+          $ref: '#/components/schemas/GetDatabaseResponse'
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+        instanceName:
+          type: string
+        instanceType:
+          $ref: '#/components/schemas/ComputeInstanceType'
+        desiredInstanceType:
+          $ref: '#/components/schemas/ComputeInstanceType'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROVISIONING
+          - READY
+          - RESIZING
+          - DELETING
+          - FAILED
+          - TERMINATED
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        deleted:
+          type: string
+          format: date-time
+    DatabaseErrorsResponse:
+      type: object
+      properties:
+        granularity:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseErrorPoint'
+    UnauthenticatedProvisionDatabaseResponse:
+      required:
+      - credentialId
+      - databaseId
+      - databaseName
+      - dbHost
+      - env
+      - password
+      - region
+      - sharded
+      - workspaceSlug
+      type: object
+      properties:
+        databaseId:
+          type: string
+        databaseName:
+          type: string
+        workspaceSlug:
+          type: string
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+        sharded:
+          type: boolean
+        apiHost:
+          type:
+          - string
+          - 'null'
+          description: Public database API URL; null for un-sharded databases.
+          format: uri
+        dbHost:
+          type: string
+          format: uri
+        credentialId:
+          type: string
+        password:
+          type: string
+        env:
+          type: object
+          additionalProperties:
+            type: string
+    UnauthenticatedProvisionDatabaseRequest:
+      type: object
+      properties:
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+    Workspace:
+      required:
+      - name
+      - slug
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+        slug:
+          minLength: 1
+          type: string
+        stripe_customer_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+    DatabaseUptimeResponse:
+      type: object
+      properties:
+        source:
+          type: string
+        scope:
+          type: string
+        granularity:
+          type: string
+        calculation:
+          type: string
+        summary:
+          $ref: '#/components/schemas/DatabaseUptimeSummary'
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseUptimePoint'
+    CreateDatabaseRequest:
+      required:
+      - databaseName
+      - region
+      type: object
+      properties:
+        databaseName:
+          minLength: 1
+          type: string
+          description: 'The name of the database to be created. Database names must be less than 64
+
+            characters, and unique within a workspace. Names may contain letters (lower
+
+            or uppercase), numbers, and underscores, and must begin with a letter or
+
+            underscore.
+
+            '
+          example: my_spectacular_db
+        region:
+          type: string
+          description: 'The region where the database will be hosted. Availability depends on the
+
+            workspace flavor and deployment configuration. Use the workspace regions
+
+            endpoint to discover available values:
+
+            - `AWS_US_WEST_2` - AWS in US West (Oregon)
+
+            - `AWS_US_EAST_1` - AWS in US East (Northern Virginia)
+
+            - `AWS_EU_CENTRAL_1` - AWS in Europe (Frankfurt)
+
+            '
+          example: AWS_US_WEST_2
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+      description: Parameters for creating a new database, including the name and region.
+    GetCredentialResponse:
+      required:
+      - database
+      - id
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        database:
+          $ref: '#/components/schemas/GetDatabaseResponse'
+        tenant:
+          type: string
+        internal:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+    RotateCredentialRequest:
+      type: object
+      properties:
+        delayOldSecretsExpirationHours:
+          maximum: 720
+          minimum: 0
+          type: number
+          format: double
+        reason:
+          type: string
+    ComputeInstanceType:
+      required:
+      - computeSize
+      - hourlyCost
+      - id
+      - memory
+      type: object
+      properties:
+        id:
+          type: string
+        computeSize:
+          minLength: 1
+          type: string
+        memory:
+          minLength: 1
+          type: string
+        hourlyCost:
+          type: number
+    DatabaseQueryPerformanceResponse:
+      type: object
+      properties:
+        source:
+          type: string
+        granularity:
+          type: string
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/DatabaseQueryPerformancePoint'
+    GetDatabaseResponse:
+      required:
+      - expandable
+      - id
+      - name
+      - region
+      - status
+      - workspace
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+        expandable:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        deleted:
+          type: string
+          format: date-time
+        apiHost:
+          type:
+          - string
+          - 'null'
+          description: Public database API URL; Since it is only used for tenants/users management, it is null for un-sharded databases.
+          format: uri
+        dbHost:
+          type: string
+          format: uri
+        parent:
+          $ref: '#/components/schemas/DatabaseParentResponse'
+    ClaimDatabaseRequest:
+      required:
+      - claimDbSession
+      type: object
+      properties:
+        claimDbSession:
+          minLength: 1
+          type: string
+    APIError_3:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - forbidden_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_rename_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_deletion_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - unauthorized_client
+          - unsupported_response_type
+          - invalid_request
+          - server_error
+          - access_denied
+          - feature_ineligible
+          - customer_lookup_failure
+          - threshold_exceeded
+          - create_rejected
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- api-openapi.json
+- global-openapi.json
+- thenile-database-openapi.yml
+- thenile-global-openapi.yml

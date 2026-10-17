@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  title: Thenile Internal API
+  version: 0.1.0-226f799
+  contact:
+    email: support@thenile.dev
+  description: 'Operations tagged Internal across 2 of this provider''s published API definitions: api-openapi.json, thenile-database-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+tags:
+- name: Internal
+paths:
+  /internal/reconciliation/compute-claims:
+    get:
+      operationId: listComputeClaims
+      parameters:
+      - name: updated_since
+        in: query
+        schema:
+          type: string
+      - name: after_id
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/InternalService'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComputeClaimView'
+      tags:
+      - Internal
+      summary: List compute claims
+      x-summary-source: derived
+    servers:
+    - url: https://global.thenile.dev
+  /internal/reconciliation/databases:
+    get:
+      operationId: listDatabases
+      parameters:
+      - name: updated_since
+        in: query
+        schema:
+          type: string
+      - name: after_id
+        in: query
+        schema:
+          type: string
+          format: uuid
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/InternalService'
+      responses:
+        default:
+          description: default response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DatabaseView'
+      tags:
+      - Internal
+      summary: List databases
+      x-summary-source: derived
+    servers:
+    - url: https://global.thenile.dev
+components:
+  schemas:
+    DatabaseView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        status:
+          type: string
+        workspaceId:
+          type: string
+          format: uuid
+        workspaceSlug:
+          type: string
+        sharedRegion:
+          type: integer
+          format: int32
+        sharedPdb:
+          type: integer
+          format: int32
+        created:
+          type: string
+        updated:
+          type: string
+        deleted:
+          type: string
+    InternalService:
+      type: object
+      properties:
+        id:
+          type: string
+    ComputeClaimView:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        regionId:
+          type: integer
+          format: int32
+        pdbId:
+          type: integer
+          format: int32
+        host:
+          type: string
+        database:
+          type: string
+        created:
+          type: string
+        updated:
+          type: string
+        deleted:
+          type: string
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- api-openapi.json
+- thenile-database-openapi.yml

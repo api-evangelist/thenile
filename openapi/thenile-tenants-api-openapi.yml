@@ -1,0 +1,873 @@
+openapi: 3.2.0
+info:
+  title: Thenile Tenants API
+  version: '1.0'
+  description: 'Operations tagged tenants across 4 of this provider''s published API definitions: api-openapi.json, us-west-2-auth-openapi.yaml, thenile-auth-openapi.yml, thenile-database-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+- url: https://us-west-2.api.thenile.dev
+  description: Regional Nile API host that serves this spec at /v2/openapi (listed in https://thenile.dev/docs/llms.txt)
+tags:
+- name: Tenants
+paths:
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}:
+    get:
+      tags:
+      - Tenants
+      summary: Get a tenant
+      description: Gets a tenant from a database.
+      operationId: globalGetTenant
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A Tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Tenants
+      summary: Update a tenant
+      description: Updates a tenant. Only the tenant name may be updated.
+      operationId: globalUpdateTenant
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+            examples:
+              Update Tenant Request:
+                summary: Updates a tenant name
+                description: Update Tenant Request
+                value:
+                  name: Customer One
+      responses:
+        '200':
+          description: Tenant updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Tenants
+      summary: Deletes a tenant
+      operationId: globalDeleteTenant
+      parameters:
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Tenant deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/tenants/{tenantId}:
+    get:
+      tags:
+      - Tenants
+      summary: Get a tenant
+      description: Gets a tenant from a database.
+      operationId: getTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A Tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Tenants
+      summary: Update a tenant
+      description: Updates a tenant. Only the tenant name may be updated.
+      operationId: updateTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest'
+            examples:
+              Update Tenant Request:
+                summary: Updates a tenant name
+                description: Update Tenant Request
+                value:
+                  name: Customer One
+      responses:
+        '200':
+          description: Tenant updated
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Tenants
+      summary: Deletes a tenant
+      operationId: deleteTenant
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Tenant deleted
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Tenant not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /v2/databases/{database}/me:
+    delete:
+      tags:
+      - Tenants
+      summary: delete the current user
+      description: sets the current user for delete.
+      operationId: deleteMe
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: user has been deleted
+          content: {}
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/invite:
+    post:
+      tags:
+      - Tenants
+      summary: Invite a user to a tenant
+      description: Allows an authenticated tenant member to invite another user via email. The invitee will receive an email and must accept the invitation.
+      operationId: inviteUserToTenant
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - identifier
+              - csrfToken
+              - redirectUrl
+              - callbackUrl
+              properties:
+                identifier:
+                  type: string
+                  format: email
+                  description: Email address of the user being invited
+                csrfToken:
+                  type: string
+                  description: CSRF token for request validation
+                redirectUrl:
+                  type: string
+                  format: uri
+                  description: URL to redirect the user to after accepting the invite
+                callbackUrl:
+                  type: string
+                  format: uri
+                  description: Callback URL to include in the invitation email
+      responses:
+        '200':
+          description: Invite sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Invite email sent
+        '400':
+          description: Bad request (validation failure, missing fields, or bad CSRF token)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized (missing or invalid session)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Tenant not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - sessionCookie: []
+    put:
+      tags:
+      - Tenants
+      summary: Accepts a tenant invite
+      description: Accepts an invite for a user to join a tenant using the token and email. The invite must be valid and not expired.
+      operationId: acceptTenantInvite
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - identifier
+              - token
+              - callbackUrl
+              properties:
+                identifier:
+                  type: string
+                  format: email
+                token:
+                  type: string
+                callbackUrl:
+                  type: string
+                  format: uri
+      responses:
+        '201':
+          description: Successfully created the user and accepted the invite
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  email:
+                    type: string
+                  name:
+                    type:
+                    - string
+                    - 'null'
+                  familyName:
+                    type:
+                    - string
+                    - 'null'
+                  givenName:
+                    type:
+                    - string
+                    - 'null'
+                  picture:
+                    type:
+                    - string
+                    - 'null'
+                    format: uri
+                  created:
+                    type: string
+                    format: date-time
+                  updated:
+                    type: string
+                    format: date-time
+                  emailVerified:
+                    type: string
+                    format: date-time
+        '400':
+          description: Missing or invalid data (e.g., invalid token, malformed email, bad callback URL)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+        '403':
+          description: Inviter is no longer a member of the tenant
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: Invite not found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '410':
+          description: Invite has expired
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/invites:
+    get:
+      tags:
+      - Tenants
+      summary: List pending invites for a tenant
+      description: Returns all pending invites for a given tenant, accessible by authenticated members of the tenant.
+      operationId: listTenantInvites
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: List of pending invites
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                    tenant_id:
+                      type: string
+                      format: uuid
+                    token:
+                      type: string
+                      description: Hashed invite token
+                    identifier:
+                      type: string
+                      format: email
+                    roles:
+                      type:
+                      - array
+                      - 'null'
+                      items:
+                        type: string
+                    created_by:
+                      type: string
+                      format: uuid
+                      description: ID of the user who sent the invite
+                    expires:
+                      type: string
+                      format: date-time
+              example:
+              - id: bd371f92-03e1-4862-9f6b-6d96d392ff18
+                tenant_id: 019731dc-2462-7615-8dc3-c9fd85e61966
+                token: 0007afb8bf432f8729491e1af35f03d111eb9a8105c0e9c3eebd8ca31585aed3
+                identifier: joseph@thenile.dev
+                roles: null
+                created_by: 019731dc-2440-7fd2-88b6-b233cc0e2695
+                expires: 2025-06-02 22:16:40.535000+00:00
+        '400':
+          description: Bad request (e.g. missing tenantId or SQL failure)
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content:
+            text/plain:
+              schema:
+                type: string
+        '404':
+          description: No invites found
+          content:
+            text/plain:
+              schema:
+                type: string
+        '500':
+          description: Internal server error
+          content:
+            text/plain:
+              schema:
+                type: string
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}:
+    put:
+      tags:
+      - Tenants
+      summary: update a tenant
+      description: updates a tenant in the database
+      operationId: putV2DatabasesByDatabaseTenantsByTenantId
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: Tenant values to be updated.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTenant'
+            examples:
+              Rename tenant:
+                summary: Renames the tenant
+                description: Tenant Request
+                value:
+                  name: New tenant name
+      responses:
+        '201':
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateTenant'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+      x-operation-id-source: normalized
+      x-operation-id-original: updateTenant
+    delete:
+      tags:
+      - Tenants
+      summary: delete a tenant
+      description: sets a tenant for delete in the database
+      operationId: deleteV2DatabasesByDatabaseTenantsByTenantId
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: update an existing tenant
+          content: {}
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+      x-operation-id-source: normalized
+      x-operation-id-original: deleteTenant
+    get:
+      tags:
+      - Tenants
+      summary: get a tenant
+      description: get information about a tenant
+      operationId: getV2DatabasesByDatabaseTenantsByTenantId
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: the tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+      x-operation-id-source: normalized
+      x-operation-id-original: getTenant
+  /v2/databases/{database}/tenants:
+    post:
+      tags:
+      - Tenants
+      summary: creates a tenant
+      description: makes a tenant, assigns user to that tenant
+      operationId: createTenant
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: A wrapper for the tenant name.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTenantRequest_2'
+            examples:
+              Create Tenant Request:
+                summary: Creates a named tenant
+                description: Create Tenant Request
+                value:
+                  name: My Sandbox
+      responses:
+        '201':
+          description: A created tenants
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+components:
+  schemas:
+    Tenant:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - pdb_creation_failure
+          - get_pdbs_failure
+          - get_ldbs_placed_on_pdb_failure
+          - credential_deletion_failure
+          - get_ldb_on_pdb_placement_status_failure
+          - pdb_deletion_failure
+          - missing_flavor_id
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    CreateTenantRequest:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          minLength: 1
+          type: string
+    CreateTenantRequest_2:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: The desired uuidv7 of the tenant
+    UpdateTenant:
+      type: object
+      properties:
+        name:
+          type: string
+    CreateTenantRequest_3:
+      required:
+      - name
+      type: object
+      properties:
+        name:
+          type: string
+        id:
+          type: string
+          description: The desired uuidv7 of the tenant
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: nile-auth.session-token
+      description: Session token stored in a cookie after user signs in, prefixed with __Secure if on https
+x-refined-from:
+- api-openapi.json
+- us-west-2-auth-openapi.yaml
+- thenile-auth-openapi.yml
+- thenile-database-openapi.yml

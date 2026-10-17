@@ -94,22 +94,16 @@ common:
 - type: TermsOfService
   url: https://www.thenile.dev/terms-of-service
 apis:
-- aid: thenile:nile-global-api
-  name: Nile Global API
-  description: Control-plane API for Nile workspaces, database provisioning, regions,
-    developer accounts and OAuth2 tokens, served from global.thenile.dev.
+- aid: thenile:thenile-auth-api
+  name: Nile Auth API
+  description: The auth API from Nile — 10 operation(s) for auth.
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
-  - Workspaces
-  - Databases
-  - Billing
+  - auth
   properties:
   - type: OpenAPI
-    url: openapi/thenile-global-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://global.thenile.dev/openapi.json
+    url: openapi/thenile-auth-api-openapi.yml
   - type: JSONSchema
     url: json-schema/thenile-apierror-schema.json
   - type: JSONSchema
@@ -122,23 +116,6 @@ apis:
     url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
   - type: JSONSchema
     url: json-schema/thenile-workspace-usage-response-schema.json
-- aid: thenile:nile-database-api
-  name: Nile Database API
-  description: 'API for managing a Nile database: tenants, users, credentials, metrics
-    and auth OIDC providers and relying parties. Spec published at api.thenile.dev/openapi.json
-    (its servers[] names global.thenile.dev).'
-  humanURL: https://www.thenile.dev/docs/api-reference
-  baseURL: https://global.thenile.dev
-  tags:
-  - Tenants
-  - Users
-  - Databases
-  properties:
-  - type: OpenAPI
-    url: openapi/thenile-database-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://api.thenile.dev/openapi.json
   - type: JSONSchema
     url: json-schema/thenile-oidcprovider-schema.json
   - type: JSONSchema
@@ -151,28 +128,406 @@ apis:
     url: json-schema/thenile-oidcrelying-party-schema.json
   - type: JSONSchema
     url: json-schema/thenile-create-basic-user-request-schema.json
-- aid: thenile:nile-auth-api
-  name: Nile Auth API
-  description: Regional Nile Auth API for sign-in, sign-up, sessions, password reset,
-    tenants and users scoped to a database, served per region (us-west-2.api.thenile.dev).
-  humanURL: https://www.thenile.dev/docs/auth/introduction
-  baseURL: https://us-west-2.api.thenile.dev
-  tags:
-  - Authentication
-  - Users
-  - Tenants
-  properties:
-  - type: OpenAPI
-    url: openapi/thenile-auth-openapi.yml
-  - type: OpenAPI
-    name: OpenAPI (provider-hosted)
-    url: https://us-west-2.api.thenile.dev/v2/openapi
   - type: JSONSchema
     url: json-schema/thenile-mfa-setup-response-schema.json
   - type: JSONSchema
     url: json-schema/thenile-mfa-disable-request-schema.json
   - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-authentication-api
+  name: Nile Authentication API
+  description: The authentication API from Nile — 18 operation(s) for authentication.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - authentication
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-authentication-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
     url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-compute-api
+  name: Nile Compute API
+  description: The compute API from Nile — 2 operation(s) for compute.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - compute
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-compute-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-credentials-api
+  name: Nile Credentials API
+  description: The credentials API from Nile — 3 operation(s) for credentials.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - credentials
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-credentials-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-databases-api
+  name: Nile Databases API
+  description: The Databases API from Nile — 18 operation(s) for databases.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - Databases
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-databases-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-developers-api
+  name: Nile Developers API
+  description: The developers API from Nile — 6 operation(s) for developers.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - developers
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-developers-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-internal-api
+  name: Nile Internal API
+  description: The Internal API from Nile — 2 operation(s) for internal.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - Internal
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-internal-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-tenants-api
+  name: Nile Tenants API
+  description: The tenants API from Nile — 7 operation(s) for tenants.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - tenants
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-tenants-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-users-api
+  name: Nile Users API
+  description: The users API from Nile — 27 operation(s) for users.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - users
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-users-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-verify-response-schema.json
+- aid: thenile:thenile-workspaces-api
+  name: Nile Workspaces API
+  description: The Workspaces API from Nile — 17 operation(s) for workspaces.
+  humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
+  baseURL: https://global.thenile.dev
+  tags:
+  - Workspaces
+  properties:
+  - type: OpenAPI
+    url: openapi/thenile-workspaces-api-openapi.yml
+  - type: JSONSchema
+    url: json-schema/thenile-apierror-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-database-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-get-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-dedicated-compute-instance-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-unauthenticated-provision-database-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-workspace-usage-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcprovider-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-user-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-tenant-ssoregistration-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-logical-database-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-oidcrelying-party-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-create-basic-user-request-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-setup-response-schema.json
+  - type: JSONSchema
+    url: json-schema/thenile-mfa-disable-request-schema.json
   - type: JSONSchema
     url: json-schema/thenile-tenant-user-schema.json
   - type: JSONSchema

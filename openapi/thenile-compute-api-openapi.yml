@@ -1,0 +1,524 @@
+openapi: 3.2.0
+info:
+  title: Thenile Compute API
+  version: 0.1.0-72f73d7
+  contact:
+    email: support@thenile.dev
+  description: 'Operations tagged compute across 2 of this provider''s published API definitions: global-openapi.json, thenile-global-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+tags:
+- name: Compute
+paths:
+  /workspaces/{workspaceSlug}/databases/{databaseName}/compute:
+    get:
+      tags:
+      - Compute
+      summary: List dedicated compute instances for a database
+      operationId: listComputeForDatabase
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: start
+        in: query
+        schema:
+          type: string
+          description: The start of a time window to search for active instances
+          format: date-time
+      - name: end
+        in: query
+        schema:
+          type: string
+          description: The end of a time window to search for active instances
+          format: date-time
+      responses:
+        '200':
+          description: Instance list retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Compute
+      summary: Create a dedicated compute instance
+      operationId: createComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/CreateComputeInstanceRequest'
+        required: true
+      responses:
+        '200':
+          description: Instance created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DedicatedComputeInstance'
+        '202':
+          description: Instance creation pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/compute/{instanceId}:
+    get:
+      tags:
+      - Compute
+      summary: Describe a dedicated compute instance
+      operationId: describeComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Dedicated compute instance details
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DedicatedComputeInstance'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Compute
+      summary: Update a dedicated compute instance
+      description: Rename and/or resize a dedicated compute instance.
+      operationId: updateComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateComputeInstanceRequest'
+        required: true
+      responses:
+        '200':
+          description: Instance updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '202':
+          description: Instance update pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Compute
+      summary: Delete a dedicated compute instance
+      description: 'Removes a compute instance from your database and queues it for deletion. The
+
+        instance will no longer appear in your Nile dashboard. When deletion is
+
+        finalized, all data associated with the instance will be deleted.'
+      operationId: deleteComputeInstance
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: instanceId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Instance deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '202':
+          description: Instance deletion pending; poll for progress.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetDatabaseResponse'
+        '401':
+          description: Unauthorized. Credentials were missing or expired.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Forbidden. The credentials provided do not grant access to the requested resource(s).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: Instance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+components:
+  schemas:
+    DedicatedComputeInstance:
+      required:
+      - desiredInstanceType
+      - instanceId
+      - instanceName
+      - instanceType
+      - status
+      type: object
+      properties:
+        instanceId:
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        database:
+          $ref: '#/components/schemas/GetDatabaseResponse'
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+        instanceName:
+          type: string
+        instanceType:
+          $ref: '#/components/schemas/ComputeInstanceType'
+        desiredInstanceType:
+          $ref: '#/components/schemas/ComputeInstanceType'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - PROVISIONING
+          - READY
+          - RESIZING
+          - DELETING
+          - FAILED
+          - TERMINATED
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        deleted:
+          type: string
+          format: date-time
+    DatabaseParentResponse:
+      required:
+      - id
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+    Workspace:
+      required:
+      - name
+      - slug
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+        slug:
+          minLength: 1
+          type: string
+        stripe_customer_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+    GetDatabaseResponse:
+      required:
+      - expandable
+      - id
+      - name
+      - region
+      - status
+      - workspace
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          minLength: 1
+          type: string
+        workspace:
+          $ref: '#/components/schemas/Workspace'
+        status:
+          type: string
+          enum:
+          - PENDING
+          - REQUESTED
+          - BUILT
+          - POOLED
+          - READY
+        region:
+          type: string
+          enum:
+          - AWS_US_WEST_2
+          - AWS_US_EAST_1
+          - AWS_EU_CENTRAL_1
+          - AZURE_EASTUS
+        expandable:
+          type: boolean
+        created:
+          type: string
+          format: date-time
+        deleted:
+          type: string
+          format: date-time
+        apiHost:
+          type:
+          - string
+          - 'null'
+          description: Public database API URL; Since it is only used for tenants/users management, it is null for un-sharded databases.
+          format: uri
+        dbHost:
+          type: string
+          format: uri
+        parent:
+          $ref: '#/components/schemas/DatabaseParentResponse'
+    UpdateComputeInstanceRequest:
+      type: object
+      properties:
+        instanceSize:
+          type: string
+        instanceName:
+          maxLength: 512
+          minLength: 1
+          type: string
+    CreateComputeInstanceRequest:
+      required:
+      - instanceName
+      - instanceSize
+      type: object
+      properties:
+        instanceSize:
+          minLength: 1
+          type: string
+        instanceName:
+          maxLength: 512
+          minLength: 1
+          type: string
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - forbidden_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_rename_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_deletion_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - unauthorized_client
+          - unsupported_response_type
+          - invalid_request
+          - server_error
+          - access_denied
+          - feature_ineligible
+          - customer_lookup_failure
+          - threshold_exceeded
+          - create_rejected
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    ComputeInstanceType:
+      required:
+      - computeSize
+      - hourlyCost
+      - id
+      - memory
+      type: object
+      properties:
+        id:
+          type: string
+        computeSize:
+          minLength: 1
+          type: string
+        memory:
+          minLength: 1
+          type: string
+        hourlyCost:
+          type: number
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+x-refined-from:
+- global-openapi.json
+- thenile-global-openapi.yml

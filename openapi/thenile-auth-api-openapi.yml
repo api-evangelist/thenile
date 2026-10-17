@@ -1,0 +1,803 @@
+openapi: 3.2.0
+info:
+  title: Thenile Auth API
+  version: '0.1'
+  description: 'Operations tagged auth across 2 of this provider''s published API definitions: us-west-2-auth-openapi.yaml, thenile-auth-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://us-west-2.api.thenile.dev
+  description: Regional Nile API host that serves this spec at /v2/openapi (listed in https://thenile.dev/docs/llms.txt)
+tags:
+- name: Auth
+paths:
+  /v2/databases/{database}/auth/signin:
+    post:
+      tags:
+      - Auth
+      summary: Sign in to the application
+      description: Authenticates a user and creates a session.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: yourpassword
+              required:
+              - email
+              - password
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+      operationId: postV2DatabasesByDatabaseAuthSignin
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/signout:
+    post:
+      tags:
+      - Auth
+      summary: Sign out of the application
+      description: Ends the user session.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '200':
+          description: Successful sign out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Signed out
+      operationId: postV2DatabasesByDatabaseAuthSignout
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/session:
+    get:
+      tags:
+      - Auth
+      summary: Get the current session
+      description: Returns the session object if the user is authenticated.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '200':
+          description: The current session
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+                  expires:
+                    type: string
+                    format: date-time
+                    example: 2024-07-16 19:20:30.450000+00:00
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+      operationId: getV2DatabasesByDatabaseAuthSession
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/csrf:
+    get:
+      tags:
+      - Auth
+      summary: Get CSRF token
+      description: Returns a CSRF token to be used in subsequent requests.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '200':
+          description: CSRF token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  csrfToken:
+                    type: string
+                    example: abc123
+      operationId: getV2DatabasesByDatabaseAuthCsrf
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/providers:
+    get:
+      tags:
+      - Auth
+      summary: Get available providers
+      description: Returns a list of available authentication providers.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '200':
+          description: List of providers
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      example: github
+                    name:
+                      type: string
+                      example: GitHub
+                    type:
+                      type: string
+                      example: oauth
+      operationId: getV2DatabasesByDatabaseAuthProviders
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/callback/{provider}:
+    post:
+      tags:
+      - Auth
+      summary: Handle provider callback
+      description: Handles the callback from an authentication provider.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      - $ref: '#/components/parameters/provider'
+      responses:
+        '200':
+          description: Successful callback
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+      operationId: postV2DatabasesByDatabaseAuthCallbackByProvider
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/session/token:
+    post:
+      tags:
+      - Auth
+      summary: Refresh session token
+      description: Refreshes the session token to extend the session duration.
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '200':
+          description: Session token refreshed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: User Name
+                      email:
+                        type: string
+                        format: email
+                        example: user@example.com
+                      image:
+                        type: string
+                        format: uri
+                        example: https://example.com/user.png
+                  expires:
+                    type: string
+                    format: date-time
+                    example: 2024-07-16 19:20:30.450000+00:00
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Unauthorized
+      operationId: postV2DatabasesByDatabaseAuthSessionToken
+      x-operation-id-source: derived
+  /v2/databases/{database}/auth/mfa:
+    put:
+      tags:
+      - Auth
+      summary: Complete an MFA challenge
+      description: Validates the second-factor code that was issued during login or MFA setup. For login challenges, a new session cookie is issued when the supplied code is valid.
+      operationId: verifyMfaChallenge
+      security:
+      - sessionCookie: []
+      parameters:
+      - $ref: '#/components/parameters/database'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaVerifyRequest'
+      responses:
+        '200':
+          description: MFA challenge was satisfied.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaVerifyResponse'
+        '400':
+          description: Invalid request payload or unsupported challenge.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: Provided MFA code was not valid.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: MFA challenge was not found.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '410':
+          description: MFA challenge has expired.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '500':
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    delete:
+      tags:
+      - Auth
+      summary: Disable MFA for the current user
+      description: Removes the user's active multi-factor credential. When `requireCode` is set or an email method is configured, the request must include a valid MFA code (and token for email) to confirm ownership.
+      operationId: disableMfa
+      security:
+      - sessionCookie: []
+      parameters:
+      - $ref: '#/components/parameters/database'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MfaDisableRequest'
+      responses:
+        '200':
+          description: MFA was disabled successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaDisableResponse'
+        '400':
+          description: Invalid request payload or MFA is not enabled.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: User is not authenticated or provided code was invalid.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '403':
+          description: Provided token does not match the current user.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: The user or challenge token could not be found.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '410':
+          description: The provided challenge token has expired.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '500':
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    post:
+      tags:
+      - Auth
+      summary: Initiate MFA setup
+      description: Begins the multi-factor enrollment flow for the signed-in user by issuing a setup challenge and, when applicable, returning authenticator bootstrap data.
+      operationId: initiateMfaSetup
+      security:
+      - sessionCookie: []
+      parameters:
+      - $ref: '#/components/parameters/database'
+      responses:
+        '201':
+          description: MFA setup challenge created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MfaSetupResponse'
+        '400':
+          description: MFA setup is not enabled for this user or the request cannot be processed.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '401':
+          description: User is not authenticated.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '500':
+          description: Unexpected server error.
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/APIError'
+  /v2/databases/{database}/auth/reset-password:
+    post:
+      tags:
+      - Auth
+      summary: Reset password
+      description: Sends an email for a user to reset their password
+      operationId: generatePasswordToken
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: json
+        in: query
+        description: set to `true` if you want json back (useful for reset password for authenticated users)
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordTokenPayload'
+      responses:
+        '200':
+          description: Nothing happened
+        '201':
+          description: Token created and email sent to user
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Missing csrf
+          content:
+            text/plain:
+              schema:
+                type: string
+    get:
+      tags:
+      - Auth
+      summary: Retrieve password token
+      description: Responds to a link (probably in an email) by setting a cookie that allows for a password to be reset
+      operationId: validatePasswordToken
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: identifier
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: callbackUrl
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: redirect
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Token has been sent to the client via cookie, if possible
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+    put:
+      tags:
+      - Auth
+      summary: Resets the password
+      description: Based on a cookie, allows a user to reset their password
+      operationId: resetPassword
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPassword'
+      responses:
+        '200':
+          description: Token has been sent to the client via cookie, if possible
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+  /v2/databases/{database}/auth/verify-email:
+    get:
+      tags:
+      - Auth
+      summary: Takes in an email verification token and ensures it is valid
+      operationId: verifyEmail
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: token
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: identifier
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: callbackUrl
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Token has been sent to the client via cookie, if possible
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+    post:
+      tags:
+      - Auth
+      summary: Sends a verification email
+      operationId: sendVerificationEmail
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                callbackUrl:
+                  type: string
+                  format: uri
+                  description: URL the user is sent to after resetting
+                  example: https://example.com/callback
+                csrfToken:
+                  type: string
+                  description: CSRF protection token
+                redirectUrl:
+                  type: string
+                  format: uri
+                  description: Optional post-auth redirect
+                  example: https://example.com/dashboard
+              required:
+              - email
+      responses:
+        '200':
+          description: Token has been sent to the client via cookie, if possible
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Unable to find the verification token
+          content:
+            text/plain:
+              schema:
+                type: string
+components:
+  parameters:
+    provider:
+      name: provider
+      in: path
+      required: true
+      schema:
+        type: string
+      description: the name of the provider (credentials, google, etc)
+    database:
+      name: database
+      in: path
+      required: true
+      schema:
+        type: string
+      description: The string (id or name, depending on the credentials)
+  schemas:
+    PasswordTokenPayload:
+      type: object
+      required:
+      - callbackUrl
+      - email
+      - redirectUrl
+      properties:
+        callbackUrl:
+          type: string
+        email:
+          type: string
+        redirectUrl:
+          type: string
+    MfaVerifyResponse:
+      type: object
+      required:
+      - ok
+      - scope
+      properties:
+        ok:
+          type: boolean
+          description: Indicates that the MFA challenge was satisfied.
+        scope:
+          type: string
+          description: Identifies whether the challenge corresponded to a login flow or an MFA setup flow.
+          enum:
+          - challenge
+          - setup
+    MfaSetupResponse:
+      type: object
+      required:
+      - ok
+      - method
+      - token
+      - expiresAt
+      - scope
+      properties:
+        ok:
+          type: boolean
+        method:
+          type: string
+          enum:
+          - authenticator
+          - email
+        token:
+          type: string
+        expiresAt:
+          type: string
+          format: date-time
+        scope:
+          type: string
+          enum:
+          - setup
+        otpauthUrl:
+          type: string
+          description: Present when the user is enrolling an authenticator app.
+        secret:
+          type: string
+          description: Base32 secret returned for authenticator enrollment.
+        maskedEmail:
+          type: string
+          description: Masked email address used for email OTP delivery.
+    ResetPassword:
+      type: object
+      required:
+      - email
+      - password
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+    MfaDisableResponse:
+      type: object
+      required:
+      - ok
+      - method
+      properties:
+        ok:
+          type: boolean
+          description: Indicates that MFA has been disabled for the user.
+        method:
+          type: string
+          enum:
+          - authenticator
+          - email
+          description: MFA method that was removed.
+    MfaDisableRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Raw MFA challenge token issued during login or setup. Required when verifying email MFA.
+        scope:
+          type: string
+          enum:
+          - challenge
+          - setup
+          description: Indicates the origin of the token.
+        method:
+          type: string
+          enum:
+          - authenticator
+          - email
+          description: Expected MFA method for the disable request.
+        code:
+          type: string
+          description: One-time passcode submitted to confirm MFA ownership.
+        requireCode:
+          type: boolean
+          description: Forces the server to verify `code` before disabling MFA.
+    APIError:
+      type: string
+    MfaVerifyRequest:
+      type: object
+      required:
+      - token
+      - code
+      properties:
+        token:
+          type: string
+          description: Base64URL encoded MFA challenge token issued during login or setup.
+        code:
+          type: string
+          description: Time-bound one time passcode (email OTP or authenticator TOTP) that proves possession of the second factor.
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: nile-auth.session-token
+      description: Session token stored in a cookie after user signs in, prefixed with __Secure if on https
+x-refined-from:
+- us-west-2-auth-openapi.yaml
+- thenile-auth-openapi.yml

@@ -1,0 +1,1844 @@
+openapi: 3.2.0
+info:
+  title: Thenile Users API
+  version: '1.0'
+  description: 'Operations tagged users across 4 of this provider''s published API definitions: api-openapi.json, us-west-2-auth-openapi.yaml, thenile-auth-openapi.yml, thenile-database-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: https://global.thenile.dev
+- url: https://us-west-2.api.thenile.dev
+  description: Regional Nile API host that serves this spec at /v2/openapi (listed in https://thenile.dev/docs/llms.txt)
+tags:
+- name: Users
+paths:
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/auth/oidc/callback:
+    get:
+      tags:
+      - Users
+      summary: Handle OIDC callback for a tenant user
+      description: Handles the callback from an OIDC provider for a specific tenant. (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: globalHandleTenantOIDCCallback
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users:
+    get:
+      tags:
+      - Users
+      summary: List tenant users
+      description: Lists users that are associated with the specified tenant.
+      operationId: globalListTenantUsers
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Users
+      summary: Create a user in a tenant
+      description: Creates a new user and associates that user with the specified tenant.
+      operationId: globalCreateTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          '
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get a user in a tenant
+      description: Gets information about a user, but only if that user belongs to the tenant specified. If the user does not belong to the tenant, this returns 404 (Not Found).
+      operationId: globalGetTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/tenants/{tenantId}/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login a user in a tenant
+      description: Authenticates a user, ensuring that the user is a member of the tenant. If the user is not a member of the tenant, this returns 401 (Unauthorized).
+      operationId: globalLoginTenantUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get a user
+      description: Gets a user by id.
+      operationId: globalGetUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Users
+      summary: Update a user
+      description: Updates user attributes by id.
+      operationId: globalUpdateUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Users
+      summary: Delete a user
+      description: Deletes a user from the database
+      operationId: globalDeleteUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/oidc/callback:
+    get:
+      tags:
+      - Users
+      summary: Handle OIDC callback for a user
+      description: Handles the callback from an OIDC provider. (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: globalHandleOIDCCallback
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/me:
+    get:
+      tags:
+      - Users
+      summary: Identify the user
+      description: Returns information about the user associated with the token provided
+      operationId: globalIdentifyUser
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users:
+    get:
+      tags:
+      - Users
+      summary: List database users
+      description: Lists all users in the database
+      operationId: globalListUsers
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login a user
+      description: Login a user with email and password
+      operationId: globalLoginUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /workspaces/{workspaceSlug}/databases/{databaseName}/users/oidc/{providerName}/login:
+    get:
+      tags:
+      - Users
+      summary: Initiate OIDC user login
+      description: Initiates the OIDC login flow for a known authentication provider.
+      operationId: globalLoginOIDCUser
+      parameters:
+      - name: workspaceSlug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: databaseName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: newTenant
+        in: query
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/tenants/{tenantId}/auth/oidc/callback:
+    get:
+      tags:
+      - Users
+      summary: Handle OIDC callback for a tenant user
+      description: Handles the callback from an OIDC provider for a specific tenant. (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: handleTenantOIDCCallback
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/tenants/{tenantId}/users:
+    get:
+      tags:
+      - Users
+      summary: List tenant users
+      description: Lists users that are associated with the specified tenant.
+      operationId: listTenantUsers
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Users
+      summary: Create a user in a tenant
+      description: Creates a new user and associates that user with the specified tenant.
+      operationId: createTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          '
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/tenants/{tenantId}/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get a user in a tenant
+      description: Gets information about a user, but only if that user belongs to the tenant specified. If the user does not belong to the tenant, this returns 404 (Not Found).
+      operationId: getTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/tenants/{tenantId}/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login a user in a tenant
+      description: Authenticates a user, ensuring that the user is a member of the tenant. If the user is not a member of the tenant, this returns 401 (Unauthorized).
+      operationId: loginTenantUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get a user
+      description: Gets a user by id.
+      operationId: getUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    put:
+      tags:
+      - Users
+      summary: Update a user
+      description: Updates user attributes by id.
+      operationId: updateUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+        required: true
+      responses:
+        '200':
+          description: User updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    delete:
+      tags:
+      - Users
+      summary: Delete a user
+      description: Deletes a user from the database
+      operationId: deleteUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: User deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users:
+    get:
+      tags:
+      - Users
+      summary: List database users
+      description: Lists all users in the database
+      operationId: listUsers
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Users found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    post:
+      tags:
+      - Users
+      summary: Create a new user
+      description: Creates a new user using basic credentials—email address and password.
+      operationId: createUser
+      requestBody:
+        description: 'The email and password combination the user will use to authenticate.
+
+          The `name` is optional; if provided it will be recorded in the `users` table.
+
+          The `newTenant` is optional; if provided, it is used as the name of a new tenant record associated with the newly created user.'
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBasicUserRequest'
+            examples:
+              Create User Request:
+                summary: Creates a user with basic credentials
+                description: Create User Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+              Create User Request with Tenant:
+                summary: Creates a user and a new tenant for that user
+                description: Create User Request with Tenant
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+                  name: A. User
+                  newTenant: My Sandbox
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users/oidc/callback:
+    get:
+      tags:
+      - Users
+      summary: Handle OIDC callback for a user
+      description: Handles the callback from an OIDC provider. (This is the URL provided to the OIDC provider as the callback URL.)
+      operationId: handleOIDCCallbackDP
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: code
+        in: query
+        required: true
+        schema:
+          minLength: 1
+          type: string
+      - name: state
+        in: query
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: A form post to the configured redirect URL
+          content:
+            text/html:
+              schema:
+                $ref: '#/components/schemas/OIDCFormPostView'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users/me:
+    get:
+      tags:
+      - Users
+      summary: Identify the user
+      description: Returns information about the user associated with the token provided
+      operationId: identifyUser
+      responses:
+        '200':
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+      security:
+      - jwtBearerAuth: []
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users/login:
+    post:
+      tags:
+      - Users
+      summary: Login a user
+      description: Login a user with email and password
+      operationId: loginUser
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: The email and password combination the user registered with.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              Login Request:
+                description: Login Request
+                value:
+                  email: a.user@somedomain.com
+                  password: somepassword
+      responses:
+        '200':
+          description: User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginUserResponse'
+        '401':
+          description: User authentication failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/APIError'
+    servers:
+    - url: https://global.thenile.dev
+  /databases/{databaseId}/users/oidc/{providerName}/login:
+    get:
+      tags:
+      - Users
+      summary: Initiate OIDC user login
+      description: Initiates the OIDC login flow for a known authentication provider.
+      operationId: loginOIDCUserDP
+      parameters:
+      - name: databaseId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: providerName
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: newTenant
+        in: query
+        schema:
+          type: string
+      - name: nonce
+        in: query
+        schema:
+          type: string
+      responses:
+        '302':
+          description: Redirect to the provider's login page
+        '404':
+          description: Unknown OIDC provider
+    servers:
+    - url: https://global.thenile.dev
+  /v2/databases/{database}/me:
+    get:
+      tags:
+      - Users
+      summary: Identify the principal
+      description: Returns information about the principal associated with the session provided
+      operationId: me
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_2'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+    put:
+      tags:
+      - Users
+      summary: Update the principal profile
+      description: Update the principal associated with the provided session
+      operationId: updateMe
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Jane Doe
+                familyName:
+                  type: string
+                  example: Doe
+                givenName:
+                  type: string
+                  example: Jane
+                picture:
+                  type: string
+                  format: uri
+                  example: https://example.com/avatar.jpg
+                emailVerified:
+                  type: boolean
+                  description: Whether the user's email is verified
+              required:
+              - name
+              - familyName
+              - givenName
+      responses:
+        '200':
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_2'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/signup:
+    post:
+      tags:
+      - Users
+      summary: Signs up a new user
+      description: Creates a user in the database and then logs them in.
+      operationId: signup
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        description: A tenant id to add the user to when they are created
+        in: query
+        schema:
+          type: string
+      - name: newTenantName
+        description: A tenant name to create, then the user to when they are created
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_2'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+  /v2/databases/{database}/tenants/{tenantId}/users/{userId}/link:
+    put:
+      tags:
+      - Users
+      summary: links an existing user to a tenant
+      description: A user that already exists is added to a tenant
+      operationId: linkTenantUser
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantUser'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+    delete:
+      tags:
+      - Users
+      summary: Unlinks a user from a tenant
+      description: Marks a user to be deleted from the tenant. It does not remove the user from other tenants or invalidate active sessions.
+      operationId: deleteTenantUser
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: The user was deleted
+          content: {}
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/users/{userId}:
+    put:
+      tags:
+      - Users
+      summary: update a user
+      description: Updates a user, provided the authorized user is in the same tenant as that user
+      operationId: updateTenantUser
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '200':
+          description: Identified user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantUser'
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+  /v2/databases/{database}/tenants/{tenantId}/users:
+    get:
+      tags:
+      - Users
+      summary: a list of tenant users
+      description: Returns a list of tenant users from the database
+      operationId: getV2DatabasesByDatabaseTenantsByTenantIdUsers
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '201':
+          description: update an existing tenant
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantUser'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+      x-operation-id-source: normalized
+      x-operation-id-original: listTenantUsers
+    post:
+      tags:
+      - Users
+      summary: create a new user and assigns them to a tenant
+      description: Creates a brand new user on a tenant
+      operationId: postV2DatabasesByDatabaseTenantsByTenantIdUsers
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: update an existing tenant wih a new user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TenantUser'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+        '404':
+          description: Not found
+          content: {}
+      security:
+      - sessionCookie: []
+      x-operation-id-source: normalized
+      x-operation-id-original: createTenantUser
+  /v2/databases/{database}/users/{userId}/tenants:
+    get:
+      tags:
+      - Users
+      summary: lists tenants of user
+      description: lists the tenants associated with a user
+      operationId: listUserTenants
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: userId
+        description: The id of of the user
+        required: true
+        in: path
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+  /v2/databases/{database}/users:
+    post:
+      tags:
+      - Users
+      summary: Creates a user
+      description: Adds a brand new user to the database
+      operationId: postV2DatabasesByDatabaseUsers
+      parameters:
+      - name: database
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: tenantId
+        description: A tenant id to add the user to when they are created
+        in: query
+        schema:
+          type: string
+      - name: newTenantName
+        description: A tenant name to create, then the user to when they are created
+        in: query
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUser'
+      responses:
+        '201':
+          description: User created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User_2'
+        '400':
+          description: API/Database failures
+          content:
+            text/plain:
+              schema:
+                type: string
+        '401':
+          description: Unauthorized
+          content: {}
+      x-operation-id-source: normalized
+      x-operation-id-original: createUser
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    LoginRequest:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+    LoginUserResponse:
+      required:
+      - id
+      - token
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        token:
+          $ref: '#/components/schemas/Token'
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    Token:
+      required:
+      - id
+      - jwt
+      - type
+      type: object
+      properties:
+        id:
+          type: string
+        jwt:
+          minLength: 1
+          type: string
+        maxAge:
+          minimum: 0
+          type: integer
+          format: int64
+        type:
+          type: string
+          enum:
+          - ACCESS_TOKEN
+          - REFRESH_TOKEN
+          - ID_TOKEN
+    CreateBasicUserRequest:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          minLength: 1
+          type: string
+          format: email
+        password:
+          minLength: 1
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        newTenant:
+          type: string
+    APIError:
+      required:
+      - errorCode
+      - message
+      - statusCode
+      type: object
+      properties:
+        errorCode:
+          type: string
+          enum:
+          - internal_error
+          - bad_request
+          - unsupported_operation
+          - entity_not_found
+          - duplicate_entity
+          - invalid_credentials
+          - unknown_oidc_provider
+          - unknown_oidc_party
+          - provider_already_exists
+          - provider_config_error
+          - provider_mismatch
+          - provider_update_error
+          - provider_disabled
+          - session_state_missing
+          - session_state_mismatch
+          - oidc_code_missing
+          - tenant_not_found
+          - constraint_violation
+          - sql_exception
+          - db_creation_failure
+          - db_status_failure
+          - db_initialization_failure
+          - db_config_missing
+          - unauthorized_workspace_access
+          - email_send_failure
+          - jdbc_exception
+          - oidc_exception
+          - region_mismatch
+          - credential_creation_failure
+          - credential_propagation_failure
+          - pdb_creation_failure
+          - get_pdbs_failure
+          - get_ldbs_placed_on_pdb_failure
+          - credential_deletion_failure
+          - get_ldb_on_pdb_placement_status_failure
+          - pdb_deletion_failure
+          - missing_flavor_id
+        message:
+          minLength: 1
+          type: string
+        statusCode:
+          type: integer
+          format: int32
+    OIDCFormPostView:
+      type: object
+      properties:
+        tenantId:
+          type: string
+    CreateUser:
+      required:
+      - email
+      - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    User_2:
+      type: object
+      properties:
+        id:
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        emailVerified:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    UpdateUser:
+      type: object
+      properties:
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+    Tenant:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    TenantUser:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        created:
+          type: string
+          format: date-time
+        emailVerified:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+    User_3:
+      type: object
+      properties:
+        id:
+          type: string
+        tenants:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+        email:
+          type: string
+        name:
+          type: string
+        givenName:
+          type: string
+        familyName:
+          type: string
+        picture:
+          type: string
+        emailVerified:
+          type: string
+          format: date-time
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+  securitySchemes:
+    jwtBearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: nile-auth.session-token
+      description: Session token stored in a cookie after user signs in, prefixed with __Secure if on https
+x-refined-from:
+- api-openapi.json
+- us-west-2-auth-openapi.yaml
+- thenile-auth-openapi.yml
+- thenile-database-openapi.yml
