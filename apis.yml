@@ -16,6 +16,14 @@ created: '2026-10-13'
 modified: '2026-10-13'
 tags:
 - Company
+- Database
+- PostgreSQL
+- Serverless
+- Multi-Tenant
+- Authentication
+- B2B SaaS
+tags_raw:
+- Company
 - Databases
 - PostgreSQL
 - Serverless
@@ -100,6 +108,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Authentication
+  tags_raw:
   - auth
   properties:
   - type: OpenAPI
@@ -144,6 +154,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Authentication
+  tags_raw:
   - authentication
   properties:
   - type: OpenAPI
@@ -188,6 +200,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Compute
+  tags_raw:
   - compute
   properties:
   - type: OpenAPI
@@ -232,6 +246,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Credentials
+  tags_raw:
   - credentials
   properties:
   - type: OpenAPI
@@ -276,6 +292,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Database
+  tags_raw:
   - Databases
   properties:
   - type: OpenAPI
@@ -320,6 +338,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Developers
+  tags_raw:
   - developers
   properties:
   - type: OpenAPI
@@ -408,6 +428,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Tenants
+  tags_raw:
   - tenants
   properties:
   - type: OpenAPI
@@ -452,6 +474,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - User
+  tags_raw:
   - users
   properties:
   - type: OpenAPI
@@ -496,6 +520,8 @@ apis:
   humanURL: https://www.thenile.dev/docs/api-reference/post-oauth2token
   baseURL: https://global.thenile.dev
   tags:
+  - Workspace
+  tags_raw:
   - Workspaces
   properties:
   - type: OpenAPI
