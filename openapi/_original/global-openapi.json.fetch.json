@@ -1,0 +1,12 @@
+{
+ "url": "https://global.thenile.dev/openapi.json",
+ "requested_url": "https://global.thenile.dev/openapi.json",
+ "status": 200,
+ "content_type": "application/json",
+ "bytes": 115573,
+ "sha256": "25437fa2f2b3ab86a570294523993399f02ba51b67fe165bb6509042d81c39de",
+ "fetched_at": "2026-10-19",
+ "fetched_by": "APIEvangelist-Harvest/1.0 (+https://apievangelist.com)",
+ "match": "byte-identical",
+ "note": "Re-fetched from the provider by verify-openapi-sources.py; the archived file is byte-identical to what the provider serves."
+}
