@@ -25,6 +25,8 @@ checked:
 - https://rubygems.org/api/v1
 - https://zapier.com/apps/nile/integrations
 - https://zapier.com/apps/thenile/integrations
+- netlify/integrations/netlify-integration-edges.yml
+- vercel/integrations/vercel-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
@@ -107,4 +109,40 @@ edges:
     detected: '2026-10-20'
   detected_by: sweep-official-clis.py
   first_seen: '2026-10-20'
+- partner_name: Netlify (own)
+  partner: netlify
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.netlify.com/integrations/nile/
+  mirror_of: netlify/integrations/netlify-integration-edges.yml
+  apps:
+  - Nile
+  - Nile Extension for Netlify
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Database
+  partner_tier: listing
+- partner_name: Vercel (own)
+  partner: vercel
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://vercel.com/marketplace/nile
+  mirror_of: vercel/integrations/vercel-integration-edges.yml
+  apps:
+  - Nile
+  listing_count: 1
+  detected: '2026-10-22'
+  detected_by: mirror-platform-listings.py
+  category: Vercel Marketplace
 templates: []
