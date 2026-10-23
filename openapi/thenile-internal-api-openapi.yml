@@ -150,3 +150,9 @@ components:
 x-refined-from:
 - api-openapi.json
 - thenile-database-openapi.yml
+x-provenance:
+  method: harvested
+  publisher: Nile
+  source: https://us-west-2.api.thenile.dev/openapi.json
+  note: split by refine-openapis from the provider's own published document, verified by fetch (openapi/_original/*.fetch.json);
+    stamped by stamp-openapi-provenance.py (roadmap#793)
